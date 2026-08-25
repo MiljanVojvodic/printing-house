@@ -10,6 +10,9 @@ import { PretragaComponent } from './pretraga-component/pretraga-component';
 import { ProizvodDetaljiComponent } from './proizvod-detalji-component/proizvod-detalji-component';
 import { ProizvodPripremaComponent } from './proizvod-priprema-component/proizvod-priprema-component';
 import { KorpaComponent } from './korpa-component/korpa-component';
+import { StamparProizvodiComponent } from './stampar-proizvodi-component/stampar-proizvodi-component';
+import { StamparKolicineComponent } from './stampar-kolicine-component/stampar-kolicine-component';
+import { StamparNarudzbineComponent } from './stampar-narudzbine-component/stampar-narudzbine-component';
 import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
@@ -37,6 +40,21 @@ export const routes: Routes = [
   {
     path: 'stampar/profil',
     component: StamparProfilComponent,
+    canActivate: [roleGuard('stampar')],
+  },
+  {
+    path: 'stampar/proizvodi',
+    component: StamparProizvodiComponent,
+    canActivate: [roleGuard('stampar')],
+  },
+  {
+    path: 'stampar/kolicine',
+    component: StamparKolicineComponent,
+    canActivate: [roleGuard('stampar')],
+  },
+  {
+    path: 'stampar/narudzbine',
+    component: StamparNarudzbineComponent,
     canActivate: [roleGuard('stampar')],
   },
   {

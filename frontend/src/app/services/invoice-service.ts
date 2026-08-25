@@ -31,4 +31,12 @@ export class InvoiceService {
       data
     );
   }
+
+  narudzbineStampara(stamparId: string) {
+    return this.http.get<Invoice[]>(`${this.uri}/stampar/${stamparId}`);
+  }
+
+  sledeciStatus(fakturaId: string) {
+    return this.http.post<Invoice>(`${this.uri}/sledeci-status/${fakturaId}`, {});
+  }
 }

@@ -141,4 +141,43 @@ export class InvoiceController {
         .json({ message: "Doslo je do greske prilikom potvrde narudzbine." });
     }
   };
+
+  narudzbineStampara = async (req: express.Request, res: express.Response) => {
+    try {
+      const fakture = await InvoiceModel.find({ stampar: req.params.stamparId })
+        .populate("kupac", "ime prezime")
+        .sort({ datumNarudzbine: -1 });
+      res.json(fakture);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  // Pomera fakturu na sledeci status u nizu (minimalni obim staje na
+  // "isporuceno" - "primljeno" postavlja klijent kroz Arhivu proizvoda,
+  // koja je deo punog obima).
+  sledeciStatus = async (req: express.Request, res: express.Response) => {
+    try {
+      const niz = ["naruceno", "u_stampi", "isporuceno"];
+      const faktura = await InvoiceModel.findById(req.params.id);
+      if (!faktura) {
+        return res.status(404).json({ message: "Faktura ne postoji." });
+      }
+
+      const trenutniIndeks = niz.indexOf(faktura.status!);
+      if (trenutniIndeks === -1 || trenutniIndeks === niz.length - 1) {
+        return res
+          .status(400)
+          .json({ message: "Faktura je vec u zavrsnom statusu." });
+      }
+
+      faktura.status = niz[trenutniIndeks + 1] as any;
+      await faktura.save();
+      res.json(faktura);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
 }

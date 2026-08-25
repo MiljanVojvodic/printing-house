@@ -1,0 +1,43 @@
+<h2>Naručeni proizvodi</h2>
+
+@if (fakture.length === 0) {
+  <p><i>Trenutno nemate nijednu narudžbinu.</i></p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>ID fakture</th>
+        <th>Klijent</th>
+        <th>Naručeni proizvodi</th>
+        <th>Ukupan iznos (RSD)</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (f of fakture; track f._id) {
+        <tr>
+          <td>{{ f._id }}</td>
+          <td>{{ kupacIme(f) }}</td>
+          <td>
+            <ol class="stavke-liste">
+              @for (s of f.stavke; track $index) {
+                <li>{{ s.naziv }} ({{ s.kolicina }})</li>
+              }
+            </ol>
+          </td>
+          <td>{{ f.ukupanIznos }}</td>
+          <td>{{ statusNaziv(f.status) }}</td>
+          <td>
+            @if (f.status !== 'isporuceno') {
+              <button type="button" (click)="pomeriStatus(f)">
+                @if (f.status === 'naruceno') { Prebaci u štampu }
+                @else { Označi kao isporučeno }
+              </button>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

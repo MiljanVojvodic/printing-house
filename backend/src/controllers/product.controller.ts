@@ -1,6 +1,7 @@
 import express from "express";
 import ProductModel from "../models/product";
 import UserModel from "../models/user";
+import CategoryModel from "../models/category";
 
 // Za dati niz proizvoda, doda naziv i grad stamparije (kreatora) u svaki
 // objekat, jednim batch upitom nad korisnicima (kreator je string kor_ime,
@@ -77,6 +78,134 @@ export class ProductController {
     } catch (err) {
       console.log(err);
       res.status(404).json({ message: "Proizvod ne postoji." });
+    }
+  };
+
+  // Svi (sopstveni) proizvodi stamparije, ukljucujuci i one bez stanja -
+  // za razliku od javne pretrage koja izuzima proizvode na 0 stanja.
+  getByStampar = async (req: express.Request, res: express.Response) => {
+    try {
+      const proizvodi = await ProductModel.find({
+        kreator: req.params.korIme,
+      }).sort({ naziv: 1 });
+      res.json(proizvodi);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  dodaj = async (req: express.Request, res: express.Response) => {
+    try {
+      const {
+        naziv,
+        kratakOpis,
+        duziOpis,
+        cena,
+        kategorija,
+        podkategorija,
+        kreator,
+        kolicinaNaStanju,
+      } = req.body;
+
+      if (!naziv || !cena || !kategorija || !podkategorija || !kreator) {
+        return res.status(400).json({
+          message: "Naziv, cena, kategorija, potkategorija i kreator su obavezni.",
+        });
+      }
+
+      const kategorijaDok = await CategoryModel.findOne({ naziv: kategorija });
+      if (!kategorijaDok) {
+        return res.status(400).json({ message: "Nepoznata kategorija." });
+      }
+      const potkategorijaPostoji = kategorijaDok.podkategorije!.some(
+        (p) => p.naziv === podkategorija
+      );
+      if (!potkategorijaPostoji) {
+        return res
+          .status(400)
+          .json({ message: "Nepoznata potkategorija za odabranu kategoriju." });
+      }
+
+      const stampar = await UserModel.findOne({ kor_ime: kreator, tip: "stampar" });
+      if (!stampar) {
+        return res.status(400).json({ message: "Nepoznata stamparija." });
+      }
+
+      let boje: string[] = ["Bela"];
+      if (req.body.boje) {
+        try {
+          const parsirano = JSON.parse(req.body.boje);
+          if (Array.isArray(parsirano) && parsirano.length > 0) boje = parsirano;
+        } catch {
+          // ostaje podrazumevano ["Bela"]
+        }
+      }
+
+      let tipoviStampe: any[] = [];
+      if (req.body.tipoviStampe) {
+        try {
+          const parsirano = JSON.parse(req.body.tipoviStampe);
+          if (Array.isArray(parsirano)) tipoviStampe = parsirano;
+        } catch {
+          // ostaje []
+        }
+      }
+
+      const slike = ((req.files as Express.Multer.File[]) || []).map(
+        (f) => f.filename
+      );
+
+      const noviProizvod = await new ProductModel({
+        naziv,
+        kratakOpis,
+        duziOpis,
+        cena: Number(cena),
+        kategorija,
+        podkategorija,
+        kreator,
+        kolicinaNaStanju: Number(kolicinaNaStanju) || 0,
+        slike,
+        boje,
+        tipoviStampe,
+        lajkovi: 0,
+        dislajkovi: 0,
+      }).save();
+
+      res.status(201).json(noviProizvod);
+    } catch (err) {
+      console.log(err);
+      res
+        .status(500)
+        .json({ message: "Doslo je do greske prilikom dodavanja proizvoda." });
+    }
+  };
+
+  azurirajKolicinu = async (req: express.Request, res: express.Response) => {
+    try {
+      const { kolicinaNaStanju, kor_ime } = req.body;
+      if (kolicinaNaStanju === undefined || kolicinaNaStanju === null || kolicinaNaStanju < 0) {
+        return res
+          .status(400)
+          .json({ message: "Kolicina mora biti nenegativan broj." });
+      }
+
+      const proizvod = await ProductModel.findById(req.params.id);
+      if (!proizvod) {
+        return res.status(404).json({ message: "Proizvod ne postoji." });
+      }
+      if (proizvod.kreator !== kor_ime) {
+        return res
+          .status(403)
+          .json({ message: "Ne mozete menjati proizvod koji nije vas." });
+      }
+
+      proizvod.kolicinaNaStanju = Number(kolicinaNaStanju);
+      await proizvod.save();
+      res.json(proizvod);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
     }
   };
 }

@@ -1,5 +1,6 @@
 import express from "express";
 import { ProductController } from "../controllers/product.controller";
+import { upload } from "../middleware/upload";
 const productRouter = express.Router();
 
 productRouter
@@ -14,7 +15,21 @@ productRouter
   .route("/pretraga")
   .get((req, res) => new ProductController().pretraga(req, res));
 
-// Mora biti poslednja ruta - :id bi inace "pojeo" /top5 i /pretraga.
+productRouter
+  .route("/stampar/:korIme")
+  .get((req, res) => new ProductController().getByStampar(req, res));
+
+productRouter
+  .route("/dodaj")
+  .post(upload.array("slike", 6), (req, res) =>
+    new ProductController().dodaj(req, res)
+  );
+
+productRouter
+  .route("/kolicina/:id")
+  .put((req, res) => new ProductController().azurirajKolicinu(req, res));
+
+// Mora biti poslednja ruta - :id bi inace "pojeo" sve rute iznad.
 productRouter
   .route("/:id")
   .get((req, res) => new ProductController().getById(req, res));

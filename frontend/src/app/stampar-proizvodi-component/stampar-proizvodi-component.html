@@ -1,0 +1,144 @@
+<h2>Proizvodi i usluge</h2>
+
+<h3>Dodaj novi proizvod</h3>
+<form class="forma-proizvoda" (ngSubmit)="posaljiProizvod()">
+  <div class="polje">
+    <label for="naziv">Naziv proizvoda *</label>
+    <input id="naziv" type="text" name="naziv" required [(ngModel)]="naziv" />
+  </div>
+
+  <div class="polje">
+    <label for="kratakOpis">Kratak opis</label>
+    <input id="kratakOpis" type="text" name="kratakOpis" [(ngModel)]="kratakOpis" />
+  </div>
+
+  <div class="polje">
+    <label for="duziOpis">Duži opis</label>
+    <textarea id="duziOpis" name="duziOpis" rows="3" [(ngModel)]="duziOpis"></textarea>
+  </div>
+
+  <div class="polje-red">
+    <div class="polje">
+      <label for="kategorija">Kategorija *</label>
+      <select
+        id="kategorija"
+        name="kategorija"
+        required
+        [(ngModel)]="odabranaKategorija"
+        (ngModelChange)="promenjenaKategorija()"
+      >
+        <option value="" disabled>Izaberi kategoriju</option>
+        @for (k of kategorije; track k._id) {
+          <option [value]="k.naziv">{{ k.naziv }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="polje">
+      <label for="podkategorija">Potkategorija *</label>
+      <select id="podkategorija" name="podkategorija" required [(ngModel)]="odabranaPodkategorija">
+        <option value="" disabled>Izaberi potkategoriju</option>
+        @for (p of podkategorijeZaOdabranu; track p.naziv) {
+          <option [value]="p.naziv">{{ p.naziv }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="polje-red">
+    <div class="polje">
+      <label for="cena">Jedinična cena (RSD) *</label>
+      <input id="cena" type="number" name="cena" min="0" required [(ngModel)]="cena" />
+    </div>
+    <div class="polje">
+      <label for="kolicinaNaStanju">Početna količina na stanju</label>
+      <input id="kolicinaNaStanju" type="number" name="kolicinaNaStanju" min="0" [(ngModel)]="kolicinaNaStanju" />
+    </div>
+  </div>
+
+  <div class="polje">
+    <label for="boje">Dostupne boje (odvojene zarezom)</label>
+    <input id="boje" type="text" name="boje" [(ngModel)]="bojeTekst" placeholder="Bela, Crna, Plava" />
+  </div>
+
+  <div class="polje">
+    <label for="slike">Slike proizvoda</label>
+    <input id="slike" type="file" multiple accept="image/jpeg,image/png,image/gif" (change)="izaberiSlike($event)" />
+  </div>
+
+  <fieldset class="usluge-fieldset">
+    <legend>Usluge štampe (opciono)</legend>
+
+    @if (usluge.length > 0) {
+      <table class="tabela-usluga">
+        <thead>
+          <tr>
+            <th>Naziv</th>
+            <th>Maks. širina (mm)</th>
+            <th>Maks. visina (mm)</th>
+            <th>Dodatna cena/kom</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of usluge; track $index) {
+            <tr>
+              <td>{{ u.naziv }}</td>
+              <td>{{ u.maxSirinaMm }}</td>
+              <td>{{ u.maxVisinaMm }}</td>
+              <td>{{ u.dodatnaCenaPoKomadu }}</td>
+              <td><button type="button" (click)="ukloniUslugu($index)">Ukloni</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    <div class="polje-red">
+      <input type="text" placeholder="Naziv usluge" [(ngModel)]="novaUsluga.naziv" name="uslugaNaziv" />
+      <input type="number" placeholder="Maks. širina mm" [(ngModel)]="novaUsluga.maxSirinaMm" name="uslugaSirina" />
+      <input type="number" placeholder="Maks. visina mm" [(ngModel)]="novaUsluga.maxVisinaMm" name="uslugaVisina" />
+      <input type="number" placeholder="Dodatna cena/kom" [(ngModel)]="novaUsluga.dodatnaCenaPoKomadu" name="uslugaCena" />
+      <button type="button" (click)="dodajUslugu()">Dodaj uslugu</button>
+    </div>
+  </fieldset>
+
+  @if (poruka) {
+    <p class="greska">{{ poruka }}</p>
+  }
+  @if (uspesnaPoruka) {
+    <p class="uspeh">{{ uspesnaPoruka }}</p>
+  }
+
+  <button type="submit" [disabled]="slanjeUToku">
+    {{ slanjeUToku ? 'Dodavanje...' : 'Dodaj proizvod' }}
+  </button>
+</form>
+
+<h3>Moji proizvodi</h3>
+@if (sopstveniProizvodi.length === 0) {
+  <p><i>Još uvek nemate dodatih proizvoda.</i></p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>Naziv</th>
+        <th>Kategorija / Potkategorija</th>
+        <th>Cena</th>
+        <th>Na stanju</th>
+        <th>Usluge</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of sopstveniProizvodi; track p._id) {
+        <tr>
+          <td>{{ p.naziv }}</td>
+          <td>{{ p.kategorija }} / {{ p.podkategorija }}</td>
+          <td>{{ p.cena }} RSD</td>
+          <td>{{ p.kolicinaNaStanju }}</td>
+          <td>{{ p.tipoviStampe.length }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

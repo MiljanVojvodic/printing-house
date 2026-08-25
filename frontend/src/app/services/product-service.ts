@@ -24,4 +24,19 @@ export class ProductService {
   dohvatiPoId(id: string) {
     return this.http.get<Proizvod>(`${this.uri}/${id}`);
   }
+
+  dohvatiZaStampariju(korIme: string) {
+    return this.http.get<Proizvod[]>(`${this.uri}/stampar/${korIme}`);
+  }
+
+  dodaj(podaci: FormData) {
+    return this.http.post<Proizvod>(`${this.uri}/dodaj`, podaci);
+  }
+
+  azurirajKolicinu(id: string, kolicinaNaStanju: number, kor_ime: string) {
+    return this.http.put<Proizvod>(`${this.uri}/kolicina/${id}`, {
+      kolicinaNaStanju,
+      kor_ime,
+    });
+  }
 }

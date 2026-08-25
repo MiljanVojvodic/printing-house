@@ -1,0 +1,9 @@
+input[type='number'] {
+  width: 100px;
+}
+
+.poruka {
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+  color: #1b7a1b;
+}

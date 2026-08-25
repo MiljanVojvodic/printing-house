@@ -1,0 +1,33 @@
+<h2>Ažuriranje količina</h2>
+
+@if (proizvodi.length === 0) {
+  <p><i>Nemate dodatih proizvoda.</i></p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>Naziv</th>
+        <th>Kategorija / Potkategorija</th>
+        <th>Trenutno na stanju</th>
+        <th>Nova količina</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of proizvodi; track p._id) {
+        <tr>
+          <td>{{ p.naziv }}</td>
+          <td>{{ p.kategorija }} / {{ p.podkategorija }}</td>
+          <td>{{ p.kolicinaNaStanju }}</td>
+          <td>
+            <input type="number" min="0" [(ngModel)]="unetaKolicina[p._id]" [name]="'kolicina-' + p._id" />
+          </td>
+          <td>
+            <button type="button" (click)="sacuvaj(p)">Sačuvaj</button>
+            <span class="poruka">{{ porukaPoProizvodu[p._id] }}</span>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

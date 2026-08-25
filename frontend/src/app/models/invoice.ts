@@ -13,9 +13,10 @@ export type StatusFakture = 'naruceno' | 'u_stampi' | 'isporuceno';
 
 export class Invoice {
   _id = '';
-  kupac = '';
-  // Mongoose populate menja stampar iz stringa (ObjectId) u objekat sa
-  // ovim poljima kada backend uradi .populate('stampar', 'nazivInstitucije grad').
+  // Mongoose populate menja kupac/stampar iz stringa (ObjectId) u objekat sa
+  // ovim poljima kada backend uradi .populate(...) (kupac: kod narudzbina
+  // stampara; stampar: kod narudzbina klijenta).
+  kupac: { _id: string; ime: string; prezime: string } | string = '';
   stampar: { _id: string; nazivInstitucije: string; grad: string } | string = '';
   stavke: StavkaFakture[] = [];
   ukupanIznos = 0;
