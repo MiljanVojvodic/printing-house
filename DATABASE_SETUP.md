@@ -96,14 +96,58 @@ bazi.
 
 ---
 
-## Kolekcija `products` — šema (za kasnije, referenca)
+## Kolekcija `products`
 
-`naziv`, `kratakOpis`, `duziOpis`, `cena` (broj), `kategorija` (string — naziv kategorije),
-`podkategorija` (string), `kreator` (string — `kor_ime` štamparije vlasnika), `kolicinaNaStanju`
-(broj), `slike` (niz stringova — putanje), `boje` (niz stringova, podrazumevano sadrži
-`"Bela"`), `tipoviStampe` (niz `{ naziv, maxSirinaMm, maxVisinaMm, dodatnaCenaPoKomadu }`),
-`lajkovi` (broj), `dislajkovi` (broj). Ništa ne unosiš ručno ovde sada — puni se kroz aplikaciju
-u Fazi 5 (štampar dodaje proizvode).
+Polja: `naziv`, `kratakOpis`, `duziOpis`, `cena` (broj), `kategorija` (string — mora se tačno
+poklapati sa `naziv` iz kolekcije `categories`, npr. `"Kreativne štampe"`), `podkategorija`
+(string), `kreator` (string — `kor_ime` štamparije vlasnika, mora postojati u `users` sa
+`tip: "stampar"` i `status: "odobren"` da bi se proizvod uopšte pojavio u katalogu), `kolicinaNaStanju`
+(broj — `0` znači da se proizvod ne prikazuje u pretrazi ni na početnoj strani), `slike` (niz
+stringova, može ostati `[]` dok ne uradimo upload proizvoda u Fazi 5), `boje` (niz stringova),
+`tipoviStampe` (niz `{ naziv, maxSirinaMm, maxVisinaMm, dodatnaCenaPoKomadu }`, može ostati
+`[]`), `lajkovi` (broj), `dislajkovi` (broj).
+
+Pravo dodavanje proizvoda kroz UI (štampar registruje nalog pa dodaje proizvode) stiže u Fazi 5.
+Do tada, ako želiš da vidiš katalog/početnu stranu sa pravim sadržajem, možeš ručno ubaciti
+par test proizvoda — zameni `"kreator"` ispod sa `kor_ime` štamparije koju registruješ i odobriš:
+
+```json
+{
+  "naziv": "Hemijska olovka",
+  "kratakOpis": "Plava hemijska olovka sa logom",
+  "duziOpis": "Kvalitetna plasticna hemijska olovka, idealna za brendiranje.",
+  "cena": 50,
+  "kategorija": "Štampa malih formata",
+  "podkategorija": "Olovke",
+  "kreator": "TVOJA_STAMPARIJA_KOR_IME",
+  "kolicinaNaStanju": 200,
+  "slike": [],
+  "boje": ["Bela", "Plava"],
+  "tipoviStampe": [],
+  "lajkovi": 12,
+  "dislajkovi": 1
+}
+```
+
+```json
+{
+  "naziv": "Pamučna polo majica",
+  "kratakOpis": "Polo majica 180g/m2",
+  "duziOpis": "Kvalitetna pamucna polo majica, pogodna za brendiranje i korporativne uniforme.",
+  "cena": 1200,
+  "kategorija": "Kreativne štampe",
+  "podkategorija": "Štampa na majicama",
+  "kreator": "TVOJA_STAMPARIJA_KOR_IME",
+  "kolicinaNaStanju": 150,
+  "slike": [],
+  "boje": ["Bela", "Crna", "Tamno plava"],
+  "tipoviStampe": [
+    { "naziv": "Direktna štampa na tekstil (DTG)", "maxSirinaMm": 300, "maxVisinaMm": 400, "dodatnaCenaPoKomadu": 350 }
+  ],
+  "lajkovi": 27,
+  "dislajkovi": 2
+}
+```
 
 ## Kolekcija `invoices` — šema (za kasnije, referenca)
 
