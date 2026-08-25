@@ -1,0 +1,121 @@
+# Ručno kreiranje baze — MongoDB "stamparija"
+
+Ovaj dokument prati fazu implementacije i ažurira se kad god neka faza uvede novo polje ili
+kolekciju. Trenutno pokriva **Fazu 0** (temeljne šeme). Backend očekuje bazu pod imenom
+`stamparija` na `mongodb://127.0.0.1:27017/stamparija` (vidi `backend/src/server.ts`).
+
+Šeme ispod su izvor istine iz koda (`backend/src/models/*.ts`) — ako ručno uneti dokument ne
+prati tačna imena polja/tipove, aplikacija neće raditi ispravno.
+
+Kreiraj bazu `stamparija` u MongoDB Compass (ili `mongosh`) sa 4 kolekcije: `users`,
+`categories`, `products`, `invoices`. Za sada (Faza 0) potrebno je popuniti samo `categories` i
+admin nalog u `users` — `products` i `invoices` pune se kasnije kroz aplikaciju (registracija/
+dodavanje proizvoda/naručivanje), pa nije potrebno ništa ručno ubacivati u njih sada.
+
+---
+
+## Kolekcija `categories`
+
+Polja: `naziv` (string, unique), `podkategorije` (niz objekata `{ naziv: string }`).
+
+Ubaci tačno ova 3 dokumenta (fiksne kategorije iz teksta zadatka + potkategorije iz primera u
+tekstu i iz Priloga 1 JSON primera):
+
+```json
+{
+  "naziv": "Štampa malih formata",
+  "podkategorije": [
+    { "naziv": "Olovke" },
+    { "naziv": "Vizit karte" },
+    { "naziv": "Flajeri" },
+    { "naziv": "Zahvalnice" },
+    { "naziv": "Pozivnice" },
+    { "naziv": "Fascikle" }
+  ]
+}
+```
+
+```json
+{
+  "naziv": "Štampa velikih formata",
+  "podkategorije": [
+    { "naziv": "Posteri" },
+    { "naziv": "Rollups" },
+    { "naziv": "Fototapete" }
+  ]
+}
+```
+
+```json
+{
+  "naziv": "Kreativne štampe",
+  "podkategorije": [
+    { "naziv": "Šolje" },
+    { "naziv": "Štampa na majicama" },
+    { "naziv": "Štampa na duksevima" },
+    { "naziv": "Štampa na cegerima" }
+  ]
+}
+```
+
+---
+
+## Kolekcija `users`
+
+Polja (zajednička za sve tipove): `kor_ime` (string, unique), `lozinka` (string — **bcrypt
+hash**, nikad plain text), `ime`, `prezime`, `telefon`, `mejl` (string, unique), `slika` (string
+— putanja/naziv fajla, podrazumevano `default_profile_image.jpg`), `tip` (jedno od: `"fizicko"`,
+`"pravno"`, `"stampar"`, `"admin"`), `status` (jedno od: `"na_cekanju"`, `"odobren"`,
+`"odbijen"`).
+
+Dodatna polja **samo** za `tip: "pravno"` i `tip: "stampar"`: `nazivInstitucije` (string),
+`adresa` (string), `grad` (string), `maticniBroj` (string, unique, tačno 8 cifara), `pib`
+(string, unique, tačno 9 cifara, ne počinje sa 0).
+
+Za sada ubaci samo admin nalog (registracija ostalih korisnika ide kroz aplikaciju od Faze 1
+nadalje, pa ćeš njih dodavati kroz UI, ne ručno):
+
+```json
+{
+  "kor_ime": "admin",
+  "lozinka": "$2b$10$3O9o5bLbzRO3hK0KFmkv6uPdeGjDZC4aS.sIw6LppIhkIkJQfd5za",
+  "ime": "Admin",
+  "prezime": "Administrator",
+  "telefon": "",
+  "mejl": "admin@stamparija.rs",
+  "slika": "default_profile_image.jpg",
+  "tip": "admin",
+  "status": "odobren"
+}
+```
+
+Ovo je bcrypt hash za lozinku `Admin123!` (generisan sa istom bcrypt bibliotekom koju backend
+koristi, cost factor 10) — na login formi za admina kucaš `admin` / `Admin123!`. Ako želiš
+drugu lozinku, javi mi pa ti generišem odgovarajući hash, ili je promeni kasnije direktno u
+bazi.
+
+---
+
+## Kolekcija `products` — šema (za kasnije, referenca)
+
+`naziv`, `kratakOpis`, `duziOpis`, `cena` (broj), `kategorija` (string — naziv kategorije),
+`podkategorija` (string), `kreator` (string — `kor_ime` štamparije vlasnika), `kolicinaNaStanju`
+(broj), `slike` (niz stringova — putanje), `boje` (niz stringova, podrazumevano sadrži
+`"Bela"`), `tipoviStampe` (niz `{ naziv, maxSirinaMm, maxVisinaMm, dodatnaCenaPoKomadu }`),
+`lajkovi` (broj), `dislajkovi` (broj). Ništa ne unosiš ručno ovde sada — puni se kroz aplikaciju
+u Fazi 5 (štampar dodaje proizvode).
+
+## Kolekcija `invoices` — šema (za kasnije, referenca)
+
+`kupac` (ObjectId → `users`), `stampar` (ObjectId → `users`), `stavke` (niz `{ proizvod,
+naziv, kolicina, cenaPoJedinici, boja, tipStampe, tekstPersonalizacije, ukupnaCenaStavke }`),
+`ukupanIznos` (broj), `status` (`"naruceno"` | `"u_stampi"` | `"isporuceno"`),
+`datumNarudzbine` (datum). Puni se kroz aplikaciju u Fazi 4 (klijent potvrđuje e-korpu).
+
+---
+
+## Statična slika
+
+Backend servira `/uploads` folder statički (`backend/uploads/`). Tamo je već ubačen
+`default_profile_image.jpg` kao placeholder — zameni ga svojom slikom po želji, samo zadrži
+isto ime fajla.

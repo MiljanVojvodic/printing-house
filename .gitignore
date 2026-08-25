@@ -6,6 +6,10 @@ yarn-error.log
 # Backend build output
 backend/dist/
 
+# User-uploaded files (keep the default placeholder image only)
+backend/uploads/*
+!backend/uploads/default_profile_image.jpg
+
 # Frontend build output
 frontend/dist/
 frontend/tmp/

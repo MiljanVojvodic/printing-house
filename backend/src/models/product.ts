@@ -2,27 +2,67 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-let Product = new Schema({
-  idP: {
-    type: Number,
+const TipStampe = new Schema(
+  {
+    naziv: { type: String, required: true },
+    maxSirinaMm: { type: Number },
+    maxVisinaMm: { type: Number },
+    dodatnaCenaPoKomadu: { type: Number, default: 0 },
   },
+  { _id: false }
+);
+
+let Product = new Schema({
   naziv: {
     type: String,
+    required: true,
   },
-  opis: {
+  kratakOpis: {
+    type: String,
+  },
+  duziOpis: {
     type: String,
   },
   cena: {
     type: Number,
+    required: true,
+  },
+  kategorija: {
+    type: String,
+    required: true,
+  },
+  podkategorija: {
+    type: String,
+    required: true,
+  },
+  kreator: {
+    // kor_ime stamparije koja je vlasnik proizvoda
+    type: String,
+    required: true,
+  },
+  kolicinaNaStanju: {
+    type: Number,
+    default: 0,
+  },
+  slike: {
+    type: [String],
+    default: [],
+  },
+  boje: {
+    type: [String],
+    default: ["Bela"],
+  },
+  tipoviStampe: {
+    type: [TipStampe],
+    default: [],
   },
   lajkovi: {
     type: Number,
+    default: 0,
   },
-  kreator: {
-    type: String,
-  },
-  status: {
-    type: String,
+  dislajkovi: {
+    type: Number,
+    default: 0,
   },
 });
 

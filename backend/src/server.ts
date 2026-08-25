@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -7,8 +8,9 @@ import productRouter from "./routers/product.router";
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
-mongoose.connect("mongodb://127.0.0.1:27017/lego");
+mongoose.connect("mongodb://127.0.0.1:27017/stamparija");
 const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("db connection ok");
