@@ -1,0 +1,32 @@
+.greska {
+  color: #b00020;
+}
+
+.uspeh {
+  color: #1b7a1b;
+}
+
+.forma-kategorije {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.forma-kategorije label {
+  display: none;
+}
+
+.kategorija-blok {
+  border: 1px solid #d7dbe0;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  max-width: 480px;
+}
+
+.forma-podkategorije {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}

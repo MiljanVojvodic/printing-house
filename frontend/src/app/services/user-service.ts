@@ -36,4 +36,22 @@ export class UserService {
   azurirajProfil(kor_ime: string, podaci: FormData) {
     return this.http.put<Korisnik>(`${this.uri}/profil/${kor_ime}`, podaci);
   }
+
+  // --- Admin ---
+
+  sviKorisnici() {
+    return this.http.get<Korisnik[]>(`${this.uri}/svi`);
+  }
+
+  naCekanju() {
+    return this.http.get<Korisnik[]>(`${this.uri}/na-cekanju`);
+  }
+
+  azurirajStatus(kor_ime: string, status: string) {
+    return this.http.put<Korisnik>(`${this.uri}/status/${kor_ime}`, { status });
+  }
+
+  obrisiNalog(kor_ime: string) {
+    return this.http.delete<{ message: string }>(`${this.uri}/${kor_ime}`);
+  }
 }

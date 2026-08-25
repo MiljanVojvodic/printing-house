@@ -17,4 +17,15 @@ export class CategoryService {
   aktivneKategorije() {
     return this.http.get<Kategorija[]>(`${this.uri}/aktivne`);
   }
+
+  dodajKategoriju(naziv: string) {
+    return this.http.post<Kategorija>(`${this.uri}/`, { naziv });
+  }
+
+  dodajPodkategoriju(kategorijaId: string, naziv: string) {
+    return this.http.post<Kategorija>(
+      `${this.uri}/${kategorijaId}/podkategorije`,
+      { naziv }
+    );
+  }
 }

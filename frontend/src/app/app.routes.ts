@@ -13,6 +13,8 @@ import { KorpaComponent } from './korpa-component/korpa-component';
 import { StamparProizvodiComponent } from './stampar-proizvodi-component/stampar-proizvodi-component';
 import { StamparKolicineComponent } from './stampar-kolicine-component/stampar-kolicine-component';
 import { StamparNarudzbineComponent } from './stampar-narudzbine-component/stampar-narudzbine-component';
+import { AdminNaloziComponent } from './admin-nalozi-component/admin-nalozi-component';
+import { AdminKategorijeComponent } from './admin-kategorije-component/admin-kategorije-component';
 import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
@@ -60,6 +62,16 @@ export const routes: Routes = [
   {
     path: 'admin/zahtevi',
     component: AdminZahteviComponent,
+    canActivate: [roleGuard('admin')],
+  },
+  {
+    path: 'admin/nalozi',
+    component: AdminNaloziComponent,
+    canActivate: [roleGuard('admin')],
+  },
+  {
+    path: 'admin/kategorije',
+    component: AdminKategorijeComponent,
     canActivate: [roleGuard('admin')],
   },
 ];

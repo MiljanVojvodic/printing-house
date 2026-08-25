@@ -31,4 +31,20 @@ userRouter
     new UserController().azurirajProfil(req, res)
   );
 
+userRouter
+  .route("/svi")
+  .get((req, res) => new UserController().sviKorisnici(req, res));
+
+userRouter
+  .route("/na-cekanju")
+  .get((req, res) => new UserController().naCekanju(req, res));
+
+userRouter
+  .route("/status/:kor_ime")
+  .put((req, res) => new UserController().azurirajStatus(req, res));
+
+userRouter
+  .route("/:kor_ime")
+  .delete((req, res) => new UserController().obrisiNalog(req, res));
+
 export default userRouter;

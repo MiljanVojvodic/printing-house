@@ -1,3 +1,37 @@
 <h2>Zahtevi za registraciju</h2>
-<p>Ulogovani ste kao administrator: {{ korisnik?.kor_ime }}.</p>
-<p><i>Tabela zahteva na čekanju sa prihvati/odbij akcijama dolazi u Fazi 6.</i></p>
+
+@if (poruka) {
+  <p class="greska">{{ poruka }}</p>
+}
+
+@if (zahtevi.length === 0) {
+  <p><i>Trenutno nema zahteva na čekanju.</i></p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>Korisničko ime</th>
+        <th>Tip naloga</th>
+        <th>Ime i prezime</th>
+        <th>Institucija</th>
+        <th>E-mejl</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (k of zahtevi; track k.kor_ime) {
+        <tr>
+          <td>{{ k.kor_ime }}</td>
+          <td>{{ tipNaziv(k.tip) }}</td>
+          <td>{{ k.ime }} {{ k.prezime }}</td>
+          <td>{{ k.nazivInstitucije || '—' }}</td>
+          <td>{{ k.mejl }}</td>
+          <td>
+            <button type="button" (click)="prihvati(k)">Prihvati</button>
+            <button type="button" (click)="odbij(k)">Odbij</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

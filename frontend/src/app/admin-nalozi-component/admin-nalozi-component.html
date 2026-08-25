@@ -1,0 +1,84 @@
+<h2>Nalozi korisnika</h2>
+
+@if (poruka) {
+  <p class="greska">{{ poruka }}</p>
+}
+@if (uspesnaPoruka) {
+  <p class="uspeh">{{ uspesnaPoruka }}</p>
+}
+
+<table>
+  <thead>
+    <tr>
+      <th>Korisničko ime</th>
+      <th>Tip</th>
+      <th>Ime i prezime</th>
+      <th>E-mejl</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (k of korisnici; track k.kor_ime) {
+      <tr>
+        <td>{{ k.kor_ime }}</td>
+        <td>{{ tipNaziv(k.tip) }}</td>
+        <td>{{ k.ime }} {{ k.prezime }}</td>
+        <td>{{ k.mejl }}</td>
+        <td>{{ statusNaziv(k.status) }}</td>
+        <td>
+          <button type="button" (click)="izmeni(k)">Izmeni</button>
+          <button type="button" (click)="obrisi(k)">Obriši</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+@if (korisnikUIzmeni) {
+  <div class="panel-izmene">
+    <h3>Izmena naloga: {{ korisnikUIzmeni.kor_ime }}</h3>
+    <form (ngSubmit)="sacuvajIzmenu()">
+      <div class="polje">
+        <label for="ime">Ime *</label>
+        <input id="ime" type="text" name="ime" required [(ngModel)]="korisnikUIzmeni.ime" />
+      </div>
+      <div class="polje">
+        <label for="prezime">Prezime *</label>
+        <input id="prezime" type="text" name="prezime" required [(ngModel)]="korisnikUIzmeni.prezime" />
+      </div>
+      <div class="polje">
+        <label for="telefon">Telefon</label>
+        <input id="telefon" type="tel" name="telefon" [(ngModel)]="korisnikUIzmeni.telefon" />
+      </div>
+      <div class="polje">
+        <label for="mejl">E-mejl *</label>
+        <input id="mejl" type="email" name="mejl" required [(ngModel)]="korisnikUIzmeni.mejl" />
+      </div>
+
+      @if (jePravniTipUIzmeni) {
+        <div class="polje">
+          <label for="nazivInstitucije">Naziv institucije *</label>
+          <input
+            id="nazivInstitucije"
+            type="text"
+            name="nazivInstitucije"
+            required
+            [(ngModel)]="korisnikUIzmeni.nazivInstitucije"
+          />
+        </div>
+        <div class="polje">
+          <label for="adresa">Adresa *</label>
+          <input id="adresa" type="text" name="adresa" required [(ngModel)]="korisnikUIzmeni.adresa" />
+        </div>
+        <div class="polje">
+          <label for="grad">Grad *</label>
+          <input id="grad" type="text" name="grad" required [(ngModel)]="korisnikUIzmeni.grad" />
+        </div>
+      }
+
+      <button type="submit">Sačuvaj</button>
+      <button type="button" (click)="otkaziIzmenu()">Otkaži</button>
+    </form>
+  </div>
+}

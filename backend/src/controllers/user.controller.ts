@@ -274,4 +274,65 @@ export class UserController {
       res.status(500).json({ message: "Doslo je do greske." });
     }
   };
+
+  // --- Admin funkcionalnosti (Faza 6) ---
+
+  sviKorisnici = async (req: express.Request, res: express.Response) => {
+    try {
+      const korisnici = await UserModel.find({}, "-lozinka").sort({ kor_ime: 1 });
+      res.json(korisnici);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  naCekanju = async (req: express.Request, res: express.Response) => {
+    try {
+      const korisnici = await UserModel.find(
+        { status: "na_cekanju" },
+        "-lozinka"
+      ).sort({ kor_ime: 1 });
+      res.json(korisnici);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  azurirajStatus = async (req: express.Request, res: express.Response) => {
+    try {
+      const { status } = req.body;
+      if (!["odobren", "odbijen", "na_cekanju"].includes(status)) {
+        return res.status(400).json({ message: "Nepoznat status." });
+      }
+      const azuriran = await UserModel.findOneAndUpdate(
+        { kor_ime: req.params.kor_ime },
+        { status },
+        { new: true }
+      );
+      if (!azuriran) {
+        return res.status(404).json({ message: "Korisnik ne postoji." });
+      }
+      res.json(bezLozinke(azuriran));
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  obrisiNalog = async (req: express.Request, res: express.Response) => {
+    try {
+      const obrisan = await UserModel.findOneAndDelete({
+        kor_ime: req.params.kor_ime,
+      });
+      if (!obrisan) {
+        return res.status(404).json({ message: "Korisnik ne postoji." });
+      }
+      res.json({ message: "Nalog je obrisan." });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
 }

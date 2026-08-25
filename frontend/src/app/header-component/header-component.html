@@ -20,6 +20,8 @@
     }
     @if (korisnik && korisnik.tip === 'admin') {
       <a routerLink="/admin/zahtevi">Zahtevi za registraciju</a>
+      <a routerLink="/admin/nalozi">Nalozi</a>
+      <a routerLink="/admin/kategorije">Kategorije</a>
     }
     @if (korisnik) {
       <span class="ulogovan-kao">{{ korisnik.kor_ime }}</span>

@@ -1,0 +1,40 @@
+<h2>Kategorije proizvoda</h2>
+
+@if (poruka) {
+  <p class="greska">{{ poruka }}</p>
+}
+@if (uspesnaPoruka) {
+  <p class="uspeh">{{ uspesnaPoruka }}</p>
+}
+
+<form class="forma-kategorije" (ngSubmit)="dodajKategoriju()">
+  <label for="novaKategorija">Nova kategorija</label>
+  <input id="novaKategorija" type="text" name="novaKategorija" [(ngModel)]="novaKategorija" />
+  <button type="submit">Dodaj kategoriju</button>
+</form>
+
+@for (k of kategorije; track k._id) {
+  <section class="kategorija-blok">
+    <h3>{{ k.naziv }}</h3>
+
+    @if (k.podkategorije.length > 0) {
+      <ul>
+        @for (p of k.podkategorije; track p.naziv) {
+          <li>{{ p.naziv }}</li>
+        }
+      </ul>
+    } @else {
+      <p><i>Još uvek nema potkategorija.</i></p>
+    }
+
+    <div class="forma-podkategorije">
+      <input
+        type="text"
+        [name]="'podkategorija-' + k._id"
+        [(ngModel)]="novaPodkategorija[k._id]"
+        placeholder="Naziv nove potkategorije"
+      />
+      <button type="button" (click)="dodajPodkategoriju(k)">Dodaj potkategoriju</button>
+    </div>
+  </section>
+}
