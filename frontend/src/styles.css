@@ -88,27 +88,18 @@ fieldset {
   border-radius: 6px;
 }
 
-/* Responsive: manji ekrani (telefoni/tableti) */
+/* Responsive: manji ekrani (telefoni/tableti).
+   Tabela ostaje tabela (zaglavlja vidljiva), ali sama postaje horizontalno
+   skrolabilna - sadrzaj stranice pri tome ostaje bez horizontalnog skrola. */
 @media (max-width: 640px) {
   .sadrzaj {
     padding: 0.75rem;
   }
 
-  table,
-  thead,
-  tbody,
-  th,
-  td,
-  tr {
+  table {
     display: block;
-  }
-
-  table th {
-    display: none;
-  }
-
-  table td {
-    border: none;
-    border-bottom: 1px solid #d7dbe0;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
 }

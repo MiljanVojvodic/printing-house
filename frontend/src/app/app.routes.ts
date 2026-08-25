@@ -74,4 +74,5 @@ export const routes: Routes = [
     component: AdminKategorijeComponent,
     canActivate: [roleGuard('admin')],
   },
+  { path: '**', redirectTo: '' },
 ];
