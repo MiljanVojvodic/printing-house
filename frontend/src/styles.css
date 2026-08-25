@@ -1,1 +1,109 @@
-/* You can add global styles to this file, and also import other style files */
+/* Globalni stilovi - uniforman izgled kroz celu aplikaciju */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  color: #1f2d3d;
+  background: #f5f6f8;
+}
+
+h1,
+h2,
+h3 {
+  color: #1f2d3d;
+}
+
+a {
+  color: #2563eb;
+}
+
+.sadrzaj {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem;
+  min-height: 60vh;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table th,
+table td {
+  border: 1px solid #d7dbe0;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+table th {
+  background: #e9edf2;
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #c3c9d1;
+  border-radius: 4px;
+}
+
+button,
+input[type='submit'],
+input[type='button'] {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover,
+input[type='submit']:hover,
+input[type='button']:hover {
+  background: #1d4ed8;
+}
+
+button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+fieldset {
+  border: 1px solid #d7dbe0;
+  border-radius: 6px;
+}
+
+/* Responsive: manji ekrani (telefoni/tableti) */
+@media (max-width: 640px) {
+  .sadrzaj {
+    padding: 0.75rem;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  table th {
+    display: none;
+  }
+
+  table td {
+    border: none;
+    border-bottom: 1px solid #d7dbe0;
+  }
+}

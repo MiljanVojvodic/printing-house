@@ -8,20 +8,24 @@ import { Korisnik } from '../models/korisnik';
 export class UserService {
   uri = 'http://localhost:4000/users';
 
-  private http = inject(HttpClient)
+  private http = inject(HttpClient);
 
   prijavaNaSistem(kor_ime: string, lozinka: string) {
-    const data = {
-      kor_ime: kor_ime,
-      lozinka: lozinka,
-    };
+    const data = { kor_ime, lozinka };
     return this.http.post<Korisnik>(`${this.uri}/login`, data);
   }
 
+  adminPrijava(kor_ime: string, lozinka: string) {
+    const data = { kor_ime, lozinka };
+    return this.http.post<Korisnik>(`${this.uri}/admin-login`, data);
+  }
+
+  registruj(podaci: FormData) {
+    return this.http.post<{ message: string }>(`${this.uri}/register`, podaci);
+  }
+
   dohvatiKorisnika(kor_ime: string) {
-    const data = {
-      kor_ime: kor_ime,
-    };
+    const data = { kor_ime };
     return this.http.post<Korisnik>(`${this.uri}/getUser`, data);
   }
 }

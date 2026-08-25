@@ -1,0 +1,24 @@
+<header class="zaglavlje">
+  <a routerLink="/" class="logo">Printing House</a>
+
+  <nav>
+    @if (!korisnik) {
+      <a routerLink="/">Početna</a>
+      <a routerLink="/prijava">Prijava</a>
+      <a routerLink="/registracija">Registracija</a>
+    }
+    @if (korisnik && (korisnik.tip === 'fizicko' || korisnik.tip === 'pravno')) {
+      <a routerLink="/klijent/profil">Moj profil</a>
+    }
+    @if (korisnik && korisnik.tip === 'stampar') {
+      <a routerLink="/stampar/profil">Moja štamparija</a>
+    }
+    @if (korisnik && korisnik.tip === 'admin') {
+      <a routerLink="/admin/zahtevi">Zahtevi za registraciju</a>
+    }
+    @if (korisnik) {
+      <span class="ulogovan-kao">{{ korisnik.kor_ime }}</span>
+      <a routerLink="/" (click)="odjaviSe()">Odjavi se</a>
+    }
+  </nav>
+</header>

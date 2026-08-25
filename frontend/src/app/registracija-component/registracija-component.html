@@ -1,0 +1,185 @@
+<h2>Registracija</h2>
+
+<form #regForm="ngForm" (ngSubmit)="posalji(regForm)" novalidate>
+  <fieldset>
+    <legend>Tip naloga</legend>
+    <label>
+      <input type="radio" name="tip" value="fizicko" [(ngModel)]="tip" />
+      Klijent - fizičko lice
+    </label>
+    <label>
+      <input type="radio" name="tip" value="pravno" [(ngModel)]="tip" />
+      Klijent - pravno lice
+    </label>
+    <label>
+      <input type="radio" name="tip" value="stampar" [(ngModel)]="tip" />
+      Štamparija
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Osnovni podaci</legend>
+
+    <div class="polje">
+      <label for="kor_ime">Korisničko ime *</label>
+      <input
+        id="kor_ime"
+        type="text"
+        name="kor_ime"
+        required
+        minlength="3"
+        [(ngModel)]="kor_ime"
+        #korImeRef="ngModel"
+      />
+      @if (korImeRef.invalid && korImeRef.touched) {
+        <span class="greska">Korisničko ime mora imati bar 3 karaktera.</span>
+      }
+    </div>
+
+    <div class="polje">
+      <label for="lozinka">Lozinka *</label>
+      <input
+        id="lozinka"
+        type="password"
+        name="lozinka"
+        required
+        minlength="8"
+        maxlength="12"
+        [(ngModel)]="lozinka"
+      />
+      <small
+        >8-12 karaktera, mora početi slovom, sadrži bar jedno veliko slovo,
+        jedan broj i jedan specijalni karakter.</small
+      >
+    </div>
+
+    <div class="polje">
+      <label for="lozinkaPotvrda">Potvrda lozinke *</label>
+      <input
+        id="lozinkaPotvrda"
+        type="password"
+        name="lozinkaPotvrda"
+        required
+        [(ngModel)]="lozinkaPotvrda"
+      />
+    </div>
+
+    <div class="polje">
+      <label for="ime">Ime *</label>
+      <input id="ime" type="text" name="ime" required [(ngModel)]="ime" />
+    </div>
+
+    <div class="polje">
+      <label for="prezime">Prezime *</label>
+      <input
+        id="prezime"
+        type="text"
+        name="prezime"
+        required
+        [(ngModel)]="prezime"
+      />
+    </div>
+
+    <div class="polje">
+      <label for="telefon">Kontakt telefon</label>
+      <input id="telefon" type="tel" name="telefon" [(ngModel)]="telefon" />
+    </div>
+
+    <div class="polje">
+      <label for="mejl">E-mejl *</label>
+      <input
+        id="mejl"
+        type="email"
+        name="mejl"
+        required
+        [(ngModel)]="mejl"
+        #mejlRef="ngModel"
+      />
+      @if (mejlRef.invalid && mejlRef.touched) {
+        <span class="greska">Unesite ispravnu e-mejl adresu.</span>
+      }
+    </div>
+
+    <div class="polje">
+      <label for="slika">Profilna slika (JPG/PNG/GIF, 100x100 do 250x250 px)</label>
+      <input
+        id="slika"
+        type="file"
+        name="slika"
+        accept="image/jpeg,image/png,image/gif"
+        (change)="izaberiSliku($event)"
+      />
+      <small>Ako ne izaberete sliku, koristi se podrazumevana profilna slika.</small>
+    </div>
+  </fieldset>
+
+  @if (jePravnoLiceIliStampar) {
+    <fieldset>
+      <legend>Podaci o instituciji</legend>
+
+      <div class="polje">
+        <label for="nazivInstitucije">Naziv institucije *</label>
+        <input
+          id="nazivInstitucije"
+          type="text"
+          name="nazivInstitucije"
+          required
+          [(ngModel)]="nazivInstitucije"
+        />
+      </div>
+
+      <div class="polje">
+        <label for="adresa">Adresa sedišta *</label>
+        <input
+          id="adresa"
+          type="text"
+          name="adresa"
+          required
+          [(ngModel)]="adresa"
+        />
+      </div>
+
+      <div class="polje">
+        <label for="grad">Grad *</label>
+        <input id="grad" type="text" name="grad" required [(ngModel)]="grad" />
+      </div>
+
+      <div class="polje">
+        <label for="maticniBroj">Matični broj (8 cifara) *</label>
+        <input
+          id="maticniBroj"
+          type="text"
+          name="maticniBroj"
+          required
+          pattern="\d{8}"
+          [(ngModel)]="maticniBroj"
+        />
+      </div>
+
+      <div class="polje">
+        <label for="pib">PIB (9 cifara, ne počinje nulom) *</label>
+        <input
+          id="pib"
+          type="text"
+          name="pib"
+          required
+          pattern="[1-9]\d{8}"
+          [(ngModel)]="pib"
+        />
+      </div>
+    </fieldset>
+  }
+
+  @if (poruka) {
+    <p class="greska">{{ poruka }}</p>
+  }
+  @if (uspesnaPoruka) {
+    <p class="uspeh">{{ uspesnaPoruka }}</p>
+  }
+
+  <button type="submit" [disabled]="slanjeUToku">
+    {{ slanjeUToku ? 'Slanje...' : 'Registruj se' }}
+  </button>
+</form>
+
+<p><a routerLink="/prijava">Već imate nalog? Prijavite se</a></p>

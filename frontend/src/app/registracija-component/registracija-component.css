@@ -1,0 +1,26 @@
+form {
+  max-width: 480px;
+}
+
+fieldset {
+  margin-bottom: 1rem;
+}
+
+.polje {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.polje label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.greska {
+  color: #b00020;
+}
+
+.uspeh {
+  color: #1b7a1b;
+}
