@@ -1,0 +1,43 @@
+<a routerLink="" (click)="odjaviSe()">Odjavi se</a>
+<br>
+<h2>Licni podaci</h2>
+<table>
+  <tr>
+    <td>Ime i prezime:</td>
+    <td>{{ulogovan.ime}} {{ulogovan.prezime}}</td>
+  </tr>
+  <tr>
+    <td>Opstina:</td>
+    <td>{{ulogovan.opstina}}</td>
+  </tr>
+</table>
+
+<h2>Proizvodi na cekanju</h2>
+@if(proizvodi.length > 0){
+<table>
+  <tr>
+    <th>Naziv</th>
+    <th>Opis</th>
+    <th>Cena</th>
+    <th>Odobri</th>
+    <th>Odbij</th>
+  </tr>
+  @for(p of proizvodi; track p.naziv){
+    <tr>
+        <td>{{p.naziv}}</td>
+        <td>{{p.opis}}</td>
+        <td><input type="number" [(ngModel)]='p.cena'></td>
+        <td><button (click)='odobri(p)'>Odobri</button></td>
+        <td><button (click)='odbij(p)'>Odbij</button></td>
+    </tr>
+  }
+  </table>
+  
+
+}
+@else {
+    <div>
+        Nema proizvoda na cekanju
+    </div>
+}
+<i>{{poruka}}</i>

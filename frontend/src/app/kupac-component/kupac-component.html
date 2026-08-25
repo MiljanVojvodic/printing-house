@@ -1,0 +1,31 @@
+<a routerLink="" (click)="odjaviSe()">Odjavi se</a>
+<br>
+<h2>Proizvodi</h2>
+<table>
+  <tr>
+    <th>Naziv</th>
+    <th>Cena</th>
+    <th>Broj lajkova</th>
+    <th>Ime</th>
+    <th>Prezime</th>
+    <th>Lajkuj</th>
+  </tr>
+  @for (p of proizvodi; track p.naziv){
+    <tr>
+        <td [class.narandzasto]='p.kreator == ulogovan.kor_ime'>{{p.naziv}}</td>
+        <td>{{p.cena}}</td>
+        <td>{{p.lajkovi}}</td>
+        <td>{{p.imeKreatora}}</td>
+        <td>{{p.prezimeKreatora}}</td>
+        <td><button (click)='lajkuj(p)'>Lajkuj</button></td>
+    </tr>
+  }
+  
+</table>
+<br>
+<h2>Dodaj proizvod</h2>
+Naziv: <input type="text" [(ngModel)]='naziv'><br>
+Opis: <textarea name="" id="" cols="30" rows="5" [(ngModel)]='opis'></textarea><br>
+<button (click)='dodajProizvod()'>Dodaj proizvod</button>
+<br>
+{{poruka}}
