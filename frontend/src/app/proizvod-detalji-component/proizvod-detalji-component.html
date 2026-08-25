@@ -28,7 +28,46 @@
           <td>Svidjanja:</td>
           <td>👍 {{ proizvod.lajkovi }} &nbsp; 👎 {{ proizvod.dislajkovi }}</td>
         </tr>
+        @if (jeKlijent) {
+          <tr>
+            <td>Opis:</td>
+            <td>{{ proizvod.duziOpis || proizvod.kratakOpis }}</td>
+          </tr>
+          <tr>
+            <td>Cena po komadu:</td>
+            <td>{{ proizvod.cena }} RSD</td>
+          </tr>
+          <tr>
+            <td>Boja:</td>
+            <td>
+              <select [(ngModel)]="odabranaBoja" name="boja">
+                @for (b of bojeZaPrikaz; track b) {
+                  <option [value]="b">{{ b }}</option>
+                }
+              </select>
+            </td>
+          </tr>
+          @if (proizvod.tipoviStampe.length > 0) {
+            <tr>
+              <td>Vrsta štampe:</td>
+              <td>
+                <select [(ngModel)]="odabraniTipStampe" name="tipStampe">
+                  <option value="">Bez dodatne usluge štampe</option>
+                  @for (t of proizvod.tipoviStampe; track t.naziv) {
+                    <option [value]="t.naziv">
+                      {{ t.naziv }} (do {{ t.maxSirinaMm }}x{{ t.maxVisinaMm }}mm, +{{ t.dodatnaCenaPoKomadu }} RSD)
+                    </option>
+                  }
+                </select>
+              </td>
+            </tr>
+          }
+        }
       </table>
+
+      @if (jeKlijent) {
+        <button type="button" (click)="dalje()">DALJE</button>
+      }
     </div>
   </div>
 

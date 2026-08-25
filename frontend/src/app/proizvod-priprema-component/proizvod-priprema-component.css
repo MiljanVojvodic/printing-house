@@ -1,0 +1,37 @@
+.polje {
+  display: flex;
+  flex-direction: column;
+  max-width: 420px;
+  margin-bottom: 1rem;
+}
+
+.polje label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.kolicina-polje {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: none;
+}
+
+.kolicina-polje input {
+  width: 100px;
+}
+
+.na-stanju {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.dugmici {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.greska {
+  color: #b00020;
+}

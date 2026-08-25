@@ -1,0 +1,51 @@
+<h2>E-korpa</h2>
+
+@if (uspesnaPoruka) {
+  <p class="uspeh">{{ uspesnaPoruka }}</p>
+  <p><a routerLink="/klijent/profil">Pogledaj moje porudžbine →</a></p>
+} @else if (grupe.length === 0) {
+  <p><i>Vaša korpa je prazna.</i></p>
+  <p><a routerLink="/">← Nastavi kupovinu</a></p>
+} @else {
+  @for (g of grupe; track g.stamparijaKorIme) {
+    <section class="grupa-stamparije">
+      <h3>{{ g.nazivStamparije }} <span class="grad">({{ g.gradStamparije }})</span></h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Proizvod</th>
+            <th>Boja</th>
+            <th>Vrsta štampe</th>
+            <th>Količina</th>
+            <th>Cena/kom</th>
+            <th>Ukupno</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of g.stavke; track $index) {
+            <tr>
+              <td>{{ s.naziv }}</td>
+              <td>{{ s.boja }}</td>
+              <td>{{ s.tipStampe || '—' }}</td>
+              <td>{{ s.kolicina }}</td>
+              <td>{{ s.cenaPoJedinici }} RSD</td>
+              <td>{{ s.ukupnaCenaStavke }} RSD</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <p class="podzbir">Ukupno za {{ g.nazivStamparije }}: <strong>{{ g.ukupnoZaStampariju }} RSD</strong></p>
+    </section>
+  }
+
+  <p class="ukupno">Ukupan iznos: <strong>{{ ukupanIznos }} RSD</strong></p>
+  <p><i>Biće kreirana po jedna faktura za svaku od {{ grupe.length }} štamparija iz korpe.</i></p>
+
+  @if (poruka) {
+    <p class="greska">{{ poruka }}</p>
+  }
+
+  <button type="button" (click)="potvrdi()" [disabled]="potvrdjivanjeUToku">
+    {{ potvrdjivanjeUToku ? 'Slanje...' : 'POTVRDI' }}
+  </button>
+}

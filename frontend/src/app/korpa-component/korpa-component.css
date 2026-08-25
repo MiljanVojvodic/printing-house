@@ -1,0 +1,27 @@
+.grupa-stamparije {
+  margin-bottom: 1.5rem;
+}
+
+.grad {
+  font-weight: 400;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.podzbir {
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+.ukupno {
+  font-size: 1.1rem;
+  text-align: right;
+}
+
+.greska {
+  color: #b00020;
+}
+
+.uspeh {
+  color: #1b7a1b;
+}

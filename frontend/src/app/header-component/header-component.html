@@ -8,7 +8,9 @@
       <a routerLink="/registracija">Registracija</a>
     }
     @if (korisnik && (korisnik.tip === 'fizicko' || korisnik.tip === 'pravno')) {
+      <a routerLink="/proizvodi">Proizvodi</a>
       <a routerLink="/klijent/profil">Moj profil</a>
+      <a routerLink="/korpa">Korpa ({{ brojStavkiUKorpi }})</a>
     }
     @if (korisnik && korisnik.tip === 'stampar') {
       <a routerLink="/stampar/profil">Moja štamparija</a>

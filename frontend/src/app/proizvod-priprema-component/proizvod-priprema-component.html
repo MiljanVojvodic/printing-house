@@ -1,0 +1,37 @@
+@if (proizvod) {
+  <h2>Priprema proizvoda: {{ proizvod.naziv }}</h2>
+  <p>Boja: <strong>{{ boja }}</strong>
+    @if (tipStampe) { &nbsp;|&nbsp; Vrsta štampe: <strong>{{ tipStampe }}</strong> }
+  </p>
+
+  <div class="polje">
+    <label for="tekst">Tekst za personalizaciju</label>
+    <textarea
+      id="tekst"
+      name="tekst"
+      rows="4"
+      [(ngModel)]="tekstPersonalizacije"
+      placeholder="Unesite tekst koji želite da bude odštampan na proizvodu (opciono)"
+    ></textarea>
+  </div>
+
+  <div class="polje kolicina-polje">
+    <label for="kolicina">Količina</label>
+    <input id="kolicina" type="number" name="kolicina" min="1" [(ngModel)]="kolicina" />
+    <span class="na-stanju">Na stanju: {{ proizvod.kolicinaNaStanju }}</span>
+  </div>
+
+  <p>Cena po komadu: {{ cenaPoJedinici }} RSD &nbsp;|&nbsp; Ukupno: <strong>{{ ukupnaCena }} RSD</strong></p>
+
+  @if (poruka) {
+    <p class="greska">{{ poruka }}</p>
+  }
+
+  <div class="dugmici">
+    <button type="button" (click)="dodajUKorpu()">DODAJ U KORPU</button>
+    <button type="button" (click)="ponisti()">PONIŠTI</button>
+    <button type="button" (click)="nazad()">NAZAD</button>
+  </div>
+} @else {
+  <p>Učitavanje...</p>
+}

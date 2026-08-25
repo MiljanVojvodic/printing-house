@@ -6,4 +6,8 @@ invoiceRouter
   .route("/klijent/:kupacId")
   .get((req, res) => new InvoiceController().mojeNarudzbine(req, res));
 
+invoiceRouter
+  .route("/potvrdi")
+  .post((req, res) => new InvoiceController().potvrdiNarudzbinu(req, res));
+
 export default invoiceRouter;

@@ -8,6 +8,8 @@ import { StamparProfilComponent } from './stampar-profil-component/stampar-profi
 import { AdminZahteviComponent } from './admin-zahtevi-component/admin-zahtevi-component';
 import { PretragaComponent } from './pretraga-component/pretraga-component';
 import { ProizvodDetaljiComponent } from './proizvod-detalji-component/proizvod-detalji-component';
+import { ProizvodPripremaComponent } from './proizvod-priprema-component/proizvod-priprema-component';
+import { KorpaComponent } from './korpa-component/korpa-component';
 import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
@@ -17,6 +19,16 @@ export const routes: Routes = [
   { path: 'administracija/prijava', component: AdminLoginComponent },
   { path: 'proizvodi', component: PretragaComponent },
   { path: 'proizvodi/:id', component: ProizvodDetaljiComponent },
+  {
+    path: 'proizvodi/:id/priprema',
+    component: ProizvodPripremaComponent,
+    canActivate: [roleGuard('fizicko', 'pravno')],
+  },
+  {
+    path: 'korpa',
+    component: KorpaComponent,
+    canActivate: [roleGuard('fizicko', 'pravno')],
+  },
   {
     path: 'klijent/profil',
     component: KlijentProfilComponent,
