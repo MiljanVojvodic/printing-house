@@ -32,4 +32,8 @@ export class UserService {
   brojStamparija() {
     return this.http.get<{ broj: number }>(`${this.uri}/stamparije-count`);
   }
+
+  azurirajProfil(kor_ime: string, podaci: FormData) {
+    return this.http.put<Korisnik>(`${this.uri}/profil/${kor_ime}`, podaci);
+  }
 }

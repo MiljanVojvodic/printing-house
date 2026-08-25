@@ -1,0 +1,59 @@
+.profil-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.slika-blok {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profilna-slika {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #d7dbe0;
+}
+
+.forma-profila {
+  max-width: 420px;
+  flex: 1;
+}
+
+.polje {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.polje label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.greska {
+  color: #b00020;
+}
+
+.uspeh {
+  color: #1b7a1b;
+}
+
+.sortirajuca-kolona {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortirajuca-kolona:hover {
+  text-decoration: underline;
+}
+
+.stavke-liste {
+  margin: 0;
+  padding-left: 1.1rem;
+}

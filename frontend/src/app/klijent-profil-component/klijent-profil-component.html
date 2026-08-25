@@ -1,3 +1,110 @@
-<h2>Profil klijenta</h2>
-<p>Dobrodošli, {{ korisnik?.ime }} {{ korisnik?.prezime }}!</p>
-<p><i>Pregled/izmena podataka i tabela porudžbina dolaze u sledećoj fazi.</i></p>
+<h2>Moj profil</h2>
+
+<div class="profil-grid">
+  <div class="slika-blok">
+    <img
+      [src]="UPLOADS_URL + '/' + (korisnik.slika || 'default_profile_image.jpg')"
+      alt="Profilna slika"
+      class="profilna-slika"
+    />
+    <label>
+      Promeni sliku
+      <input type="file" accept="image/jpeg,image/png,image/gif" (change)="izaberiSliku($event)" />
+    </label>
+  </div>
+
+  <form class="forma-profila" (ngSubmit)="sacuvajProfil()">
+    <div class="polje">
+      <label>Korisničko ime</label>
+      <input type="text" [value]="korisnik.kor_ime" disabled />
+    </div>
+
+    <div class="polje">
+      <label for="ime">Ime *</label>
+      <input id="ime" type="text" name="ime" required [(ngModel)]="korisnik.ime" />
+    </div>
+
+    <div class="polje">
+      <label for="prezime">Prezime *</label>
+      <input id="prezime" type="text" name="prezime" required [(ngModel)]="korisnik.prezime" />
+    </div>
+
+    <div class="polje">
+      <label for="telefon">Kontakt telefon</label>
+      <input id="telefon" type="tel" name="telefon" [(ngModel)]="korisnik.telefon" />
+    </div>
+
+    <div class="polje">
+      <label for="mejl">E-mejl *</label>
+      <input id="mejl" type="email" name="mejl" required [(ngModel)]="korisnik.mejl" />
+    </div>
+
+    @if (jePravnoLice) {
+      <div class="polje">
+        <label for="nazivInstitucije">Naziv institucije *</label>
+        <input
+          id="nazivInstitucije"
+          type="text"
+          name="nazivInstitucije"
+          required
+          [(ngModel)]="korisnik.nazivInstitucije"
+        />
+      </div>
+      <div class="polje">
+        <label for="adresa">Adresa sedišta *</label>
+        <input id="adresa" type="text" name="adresa" required [(ngModel)]="korisnik.adresa" />
+      </div>
+      <div class="polje">
+        <label for="grad">Grad *</label>
+        <input id="grad" type="text" name="grad" required [(ngModel)]="korisnik.grad" />
+      </div>
+    }
+
+    @if (poruka) {
+      <p class="greska">{{ poruka }}</p>
+    }
+    @if (uspesnaPoruka) {
+      <p class="uspeh">{{ uspesnaPoruka }}</p>
+    }
+
+    <button type="submit" [disabled]="cuvanjeUToku">
+      {{ cuvanjeUToku ? 'Čuvanje...' : 'Sačuvaj izmene' }}
+    </button>
+  </form>
+</div>
+
+<h3>Moje porudžbine</h3>
+@if (fakture.length === 0) {
+  <p><i>Trenutno nemate nijednu porudžbinu.</i></p>
+} @else {
+  <table class="tabela-narudzbina">
+    <thead>
+      <tr>
+        <th>ID fakture</th>
+        <th (click)="sortiraj('nazivStamparije')" class="sortirajuca-kolona">Štamparija ⇅</th>
+        <th (click)="sortiraj('grad')" class="sortirajuca-kolona">Grad ⇅</th>
+        <th>Naručeni proizvodi</th>
+        <th (click)="sortiraj('ukupanIznos')" class="sortirajuca-kolona">Ukupan iznos (RSD) ⇅</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (f of fakture; track f._id) {
+        <tr>
+          <td>{{ f._id }}</td>
+          <td>{{ nazivStamparije(f) }}</td>
+          <td>{{ gradStamparije(f) }}</td>
+          <td>
+            <ol class="stavke-liste">
+              @for (s of f.stavke; track $index) {
+                <li>{{ s.naziv }} ({{ s.kolicina }})</li>
+              }
+            </ol>
+          </td>
+          <td>{{ f.ukupanIznos }}</td>
+          <td>{{ statusNaziv(f.status) }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

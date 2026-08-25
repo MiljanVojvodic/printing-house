@@ -174,6 +174,80 @@ export class UserController {
     }
   };
 
+  // Azuriranje sopstvenih podataka. kor_ime (iz rute) je nepromenljivo -
+  // cak i ako stigne u telu zahteva, ignorise se. Nema posebne provere
+  // vlasnistva (nema tokena/sesije u ovom projektu) - frontend uvek salje
+  // kor_ime ulogovanog korisnika iz localStorage.
+  azurirajProfil = async (req: express.Request, res: express.Response) => {
+    try {
+      const kor_ime = req.params.kor_ime;
+      const postojeci = await UserModel.findOne({ kor_ime });
+      if (!postojeci) {
+        return res.status(404).json({ message: "Korisnik ne postoji." });
+      }
+
+      const { ime, prezime, telefon, mejl } = req.body;
+      const poruke = validacionePoruke();
+
+      if (!ime || !prezime || !mejl) {
+        return res
+          .status(400)
+          .json({ message: "Ime, prezime i mejl su obavezni." });
+      }
+      if (!MEJL_REGEX.test(mejl)) {
+        return res.status(400).json({ message: poruke.mejl });
+      }
+
+      const izmene: any = { ime, prezime, telefon, mejl };
+
+      if (PRAVNI_TIPOVI.includes(postojeci.tip!)) {
+        const { nazivInstitucije, adresa, grad } = req.body;
+        if (!nazivInstitucije || !adresa || !grad) {
+          return res.status(400).json({
+            message: "Naziv institucije, adresa i grad su obavezni.",
+          });
+        }
+        izmene.nazivInstitucije = nazivInstitucije;
+        izmene.adresa = adresa;
+        izmene.grad = grad;
+      }
+
+      if (
+        mejl !== postojeci.mejl &&
+        (await UserModel.findOne({ mejl, kor_ime: { $ne: kor_ime } }))
+      ) {
+        return res
+          .status(409)
+          .json({ message: "Nalog sa ovom mejl adresom vec postoji." });
+      }
+
+      if (req.file) {
+        const greska = proveriDimenzijeSlike(req.file.path);
+        if (greska) {
+          return res.status(400).json({ message: greska });
+        }
+        izmene.slika = req.file.filename;
+      }
+
+      const azuriran = await UserModel.findOneAndUpdate(
+        { kor_ime },
+        izmene,
+        { new: true }
+      );
+      return res.json(bezLozinke(azuriran));
+    } catch (err: any) {
+      console.log(err);
+      if (err.code === 11000) {
+        return res
+          .status(409)
+          .json({ message: "Nalog sa ovom mejl adresom vec postoji." });
+      }
+      return res
+        .status(500)
+        .json({ message: "Doslo je do greske prilikom azuriranja." });
+    }
+  };
+
   stamparijeCount = async (req: express.Request, res: express.Response) => {
     try {
       const broj = await UserModel.countDocuments({

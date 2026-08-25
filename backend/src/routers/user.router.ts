@@ -25,4 +25,10 @@ userRouter
   .route("/stamparije-count")
   .get((req, res) => new UserController().stamparijeCount(req, res));
 
+userRouter
+  .route("/profil/:kor_ime")
+  .put(upload.single("slika"), (req, res) =>
+    new UserController().azurirajProfil(req, res)
+  );
+
 export default userRouter;

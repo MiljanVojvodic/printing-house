@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import userRouter from "./routers/user.router";
 import productRouter from "./routers/product.router";
 import categoryRouter from "./routers/category.router";
+import invoiceRouter from "./routers/invoice.router";
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,7 @@ const router = express.Router();
 router.use("/users", userRouter);
 router.use("/products", productRouter);
 router.use("/categories", categoryRouter);
+router.use("/invoices", invoiceRouter);
 
 app.use("/", router);
 
