@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import userRouter from "./routers/user.router";
 import productRouter from "./routers/product.router";
+import categoryRouter from "./routers/category.router";
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ connection.once("open", () => {
 const router = express.Router();
 router.use("/users", userRouter);
 router.use("/products", productRouter);
+router.use("/categories", categoryRouter);
 
 app.use("/", router);
 

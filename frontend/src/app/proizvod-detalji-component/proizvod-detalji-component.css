@@ -1,0 +1,33 @@
+.detalji-grid {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.glavna-slika {
+  max-width: 320px;
+  max-height: 320px;
+  border-radius: 6px;
+  border: 1px solid #d7dbe0;
+}
+
+.bez-slike {
+  width: 250px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9edf2;
+  border-radius: 6px;
+  color: #64748b;
+}
+
+.info table td:first-child {
+  font-weight: 600;
+  padding-right: 1rem;
+}
+
+.greska {
+  color: #b00020;
+}

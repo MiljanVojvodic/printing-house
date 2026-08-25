@@ -174,6 +174,19 @@ export class UserController {
     }
   };
 
+  stamparijeCount = async (req: express.Request, res: express.Response) => {
+    try {
+      const broj = await UserModel.countDocuments({
+        tip: "stampar",
+        status: "odobren",
+      });
+      return res.json({ broj });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
   getUser = async (req: express.Request, res: express.Response) => {
     try {
       const kor_ime = req.body.kor_ime;

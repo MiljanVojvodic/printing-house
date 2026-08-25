@@ -21,4 +21,8 @@ userRouter
   .route("/getUser")
   .post((req, res) => new UserController().getUser(req, res));
 
+userRouter
+  .route("/stamparije-count")
+  .get((req, res) => new UserController().stamparijeCount(req, res));
+
 export default userRouter;

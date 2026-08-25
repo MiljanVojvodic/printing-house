@@ -1,8 +1,28 @@
 <h2>Printing House</h2>
 <p>
-  Platforma za povezivanje klijenata i štamparija. Pregled proizvoda i
-  pretraga stižu u sledećoj fazi.
+  Platforma za povezivanje klijenata i štamparija. Trenutno je u sistemu
+  registrovano <strong>{{ brojStamparija }}</strong> štamparija.
 </p>
+
+@if (top5.length > 0) {
+  <section class="top5">
+    <h3>TOP 5 najbolje ocenjenih proizvoda</h3>
+    <ol>
+      @for (p of top5; track p._id) {
+        <li>
+          <a [routerLink]="['/proizvodi', p._id]">{{ p.naziv }}</a>
+          — {{ p.nazivStamparije }} ({{ p.lajkovi }} 👍)
+        </li>
+      }
+    </ol>
+  </section>
+}
+
+<section>
+  <h3>Pretraga proizvoda</h3>
+  <app-pretraga-component></app-pretraga-component>
+</section>
+
 <p>
   <a routerLink="/prijava">Prijava</a> |
   <a routerLink="/registracija">Registracija</a>

@@ -1,0 +1,41 @@
+@if (proizvod) {
+  <h2>{{ proizvod.naziv }}</h2>
+
+  <div class="detalji-grid">
+    <div class="galerija">
+      @if (glavnaSlikaUrl) {
+        <img [src]="glavnaSlikaUrl" [alt]="proizvod.naziv" class="glavna-slika" />
+      } @else {
+        <div class="bez-slike">Nema slike</div>
+      }
+    </div>
+
+    <div class="info">
+      <table>
+        <tr>
+          <td>Štamparija:</td>
+          <td>{{ proizvod.nazivStamparije }}</td>
+        </tr>
+        <tr>
+          <td>Grad:</td>
+          <td>{{ proizvod.gradStamparije }}</td>
+        </tr>
+        <tr>
+          <td>Kategorija:</td>
+          <td>{{ proizvod.kategorija }} / {{ proizvod.podkategorija }}</td>
+        </tr>
+        <tr>
+          <td>Svidjanja:</td>
+          <td>👍 {{ proizvod.lajkovi }} &nbsp; 👎 {{ proizvod.dislajkovi }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <p><a routerLink="/">← Nazad na početnu</a></p>
+} @else if (ucitavanjeNeuspesno) {
+  <p class="greska">Proizvod ne postoji.</p>
+  <p><a routerLink="/">← Nazad na početnu</a></p>
+} @else {
+  <p>Učitavanje...</p>
+}

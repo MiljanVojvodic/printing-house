@@ -1,0 +1,27 @@
+.forma-pretrage {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.polje-inline {
+  display: flex;
+  flex-direction: column;
+}
+
+.polje-inline label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.sortirajuca-kolona {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortirajuca-kolona:hover {
+  text-decoration: underline;
+}

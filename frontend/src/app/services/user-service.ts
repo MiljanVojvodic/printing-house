@@ -28,4 +28,8 @@ export class UserService {
     const data = { kor_ime };
     return this.http.post<Korisnik>(`${this.uri}/getUser`, data);
   }
+
+  brojStamparija() {
+    return this.http.get<{ broj: number }>(`${this.uri}/stamparije-count`);
+  }
 }

@@ -6,6 +6,8 @@ import { RegistracijaComponent } from './registracija-component/registracija-com
 import { KlijentProfilComponent } from './klijent-profil-component/klijent-profil-component';
 import { StamparProfilComponent } from './stampar-profil-component/stampar-profil-component';
 import { AdminZahteviComponent } from './admin-zahtevi-component/admin-zahtevi-component';
+import { PretragaComponent } from './pretraga-component/pretraga-component';
+import { ProizvodDetaljiComponent } from './proizvod-detalji-component/proizvod-detalji-component';
 import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
@@ -13,6 +15,8 @@ export const routes: Routes = [
   { path: 'prijava', component: LoginComponent },
   { path: 'registracija', component: RegistracijaComponent },
   { path: 'administracija/prijava', component: AdminLoginComponent },
+  { path: 'proizvodi', component: PretragaComponent },
+  { path: 'proizvodi/:id', component: ProizvodDetaljiComponent },
   {
     path: 'klijent/profil',
     component: KlijentProfilComponent,
