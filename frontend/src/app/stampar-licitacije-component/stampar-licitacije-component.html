@@ -1,0 +1,80 @@
+<h2>Licitacije</h2>
+<p><i>Otvorene javne nabavke pravnih lica i vaše prethodne ponude.</i></p>
+
+@if (nabavke.length === 0) {
+  <p><i>Trenutno nema javnih nabavki.</i></p>
+} @else {
+  @for (n of nabavke; track n._id) {
+    <section class="nabavka-blok">
+      <h3>Nabavka {{ n._id }} <span class="klijent">— {{ nazivKlijenta(n) }}</span></h3>
+      <p>
+        Raspisana: {{ n.datumRaspisivanja | date: 'dd.MM.yyyy HH:mm' }} &nbsp;|&nbsp;
+        Rok: {{ n.rokIsteka | date: 'dd.MM.yyyy HH:mm' }} &nbsp;|&nbsp;
+        Status: <strong>{{ n.status === 'otvorena' && !jeIstekla(n) ? 'Otvorena' : 'Zatvorena' }}</strong>
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Traženi proizvod</th>
+            <th>Količina</th>
+            <th>Vaša cena/kom (RSD)</th>
+            <th>Vaša dostupna količina</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of n.stavke; track s.proizvod) {
+            <tr>
+              <td>{{ s.naziv }}</td>
+              <td>{{ s.kolicina }}</td>
+              <td>
+                <input
+                  type="number"
+                  min="0"
+                  [disabled]="n.status !== 'otvorena' || jeIstekla(n)"
+                  [(ngModel)]="unetaCena[kljuc(n._id, s.proizvod)]"
+                  [name]="'cena-' + n._id + '-' + s.proizvod"
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  min="0"
+                  [disabled]="n.status !== 'otvorena' || jeIstekla(n)"
+                  [(ngModel)]="unetaKolicina[kljuc(n._id, s.proizvod)]"
+                  [name]="'kolicina-' + n._id + '-' + s.proizvod"
+                />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (poruka[n._id]) {
+        <p class="greska">{{ poruka[n._id] }}</p>
+      }
+
+      @if (n.status === 'otvorena' && !jeIstekla(n)) {
+        <button type="button" (click)="posaljiPonudu(n)">
+          {{ poslatoZaNabavku[n._id] ? 'Ažuriraj ponudu' : 'Pošalji ponudu' }}
+        </button>
+        @if (poslatoZaNabavku[n._id]) {
+          <span class="uspeh">Ponuda je poslata.</span>
+        }
+      } @else if (n.status === 'zatvorena') {
+        @if (n.pobednik) {
+          <p class="ishod">
+            Pobednik: <strong>{{ nazivPobednika(n) }}</strong> — {{ n.ukupanIznosPobednika }} RSD.
+            @if (!poslatoZaNabavku[n._id]) {
+              <i>Niste učestvovali u ovoj licitaciji.</i>
+            }
+          </p>
+        } @else {
+          <p class="ishod">Nabavka je zatvorena bez pobednika.</p>
+        }
+      } @else {
+        <p><i>Rok je istekao, čeka se zatvaranje nabavke.</i></p>
+      }
+    </section>
+  }
+}

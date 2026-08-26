@@ -1,0 +1,55 @@
+<h2>Javne nabavke</h2>
+<p><i>Vaše raspisane licitacije za štamparije.</i></p>
+
+@if (nabavke.length === 0) {
+  <p><i>Još uvek niste raspisali nijednu javnu nabavku.</i></p>
+} @else {
+  @for (n of nabavke; track n._id) {
+    <section class="nabavka-blok">
+      <h3>Nabavka {{ n._id }}</h3>
+      <p>
+        Raspisana: {{ n.datumRaspisivanja | date: 'dd.MM.yyyy HH:mm' }} &nbsp;|&nbsp;
+        Rok: {{ n.rokIsteka | date: 'dd.MM.yyyy HH:mm' }} &nbsp;|&nbsp;
+        Status: <strong>{{ n.status === 'otvorena' ? 'Otvorena' : 'Zatvorena' }}</strong>
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Proizvod</th>
+            <th>Količina</th>
+            <th>Boja</th>
+            <th>Vrsta štampe</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of n.stavke; track $index) {
+            <tr>
+              <td>{{ s.naziv }}</td>
+              <td>{{ s.kolicina }}</td>
+              <td>{{ s.boja }}</td>
+              <td>{{ s.tipStampe || '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (n.status === 'zatvorena') {
+        @if (n.pobednik) {
+          <p class="pobednik">
+            Pobednik: <strong>{{ nazivPobednika(n) }}</strong>
+            — ukupno {{ n.ukupanIznosPobednika }} RSD. Faktura je kreirana i prosleđena
+            štampariji (status "u štampi").
+          </p>
+        } @else {
+          <p class="bez-pobednika">
+            Nijedna štamparija nije poslala validnu ponudu (ili nije bilo dovoljno
+            proizvoda na stanju) - nabavka je zatvorena bez pobednika.
+          </p>
+        }
+      } @else {
+        <p><i>Čeka se na ponude štamparija do isteka roka.</i></p>
+      }
+    </section>
+  }
+}

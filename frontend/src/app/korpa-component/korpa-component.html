@@ -2,7 +2,11 @@
 
 @if (uspesnaPoruka) {
   <p class="uspeh">{{ uspesnaPoruka }}</p>
-  <p><a routerLink="/klijent/profil">Pogledaj moje porudžbine →</a></p>
+  @if (jePravnoLice) {
+    <p><a routerLink="/klijent/javne-nabavke">Pogledaj moje javne nabavke →</a></p>
+  } @else {
+    <p><a routerLink="/klijent/profil">Pogledaj moje porudžbine →</a></p>
+  }
 } @else if (grupe.length === 0) {
   <p><i>Vaša korpa je prazna.</i></p>
   <p><a routerLink="/">← Nastavi kupovinu</a></p>
@@ -39,7 +43,12 @@
   }
 
   <p class="ukupno">Ukupan iznos: <strong>{{ ukupanIznos }} RSD</strong></p>
-  <p><i>Biće kreirana po jedna faktura za svaku od {{ grupe.length }} štamparija iz korpe.</i></p>
+  @if (jePravnoLice) {
+    <p><i>Kao pravno lice, potvrdom se ne kreiraju fakture već se raspisuje javna nabavka
+      (licitacija) svim štamparijama, u trajanju od 10 minuta.</i></p>
+  } @else {
+    <p><i>Biće kreirana po jedna faktura za svaku od {{ grupe.length }} štamparija iz korpe.</i></p>
+  }
 
   @if (poruka) {
     <p class="greska">{{ poruka }}</p>

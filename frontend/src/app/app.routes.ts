@@ -16,6 +16,8 @@ import { StamparNarudzbineComponent } from './stampar-narudzbine-component/stamp
 import { AdminNaloziComponent } from './admin-nalozi-component/admin-nalozi-component';
 import { AdminKategorijeComponent } from './admin-kategorije-component/admin-kategorije-component';
 import { ArhivaProizvodaComponent } from './arhiva-proizvoda-component/arhiva-proizvoda-component';
+import { JavneNabavkeComponent } from './javne-nabavke-component/javne-nabavke-component';
+import { StamparLicitacijeComponent } from './stampar-licitacije-component/stampar-licitacije-component';
 import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
@@ -46,6 +48,11 @@ export const routes: Routes = [
     canActivate: [roleGuard('fizicko', 'pravno')],
   },
   {
+    path: 'klijent/javne-nabavke',
+    component: JavneNabavkeComponent,
+    canActivate: [roleGuard('pravno')],
+  },
+  {
     path: 'stampar/profil',
     component: StamparProfilComponent,
     canActivate: [roleGuard('stampar')],
@@ -63,6 +70,11 @@ export const routes: Routes = [
   {
     path: 'stampar/narudzbine',
     component: StamparNarudzbineComponent,
+    canActivate: [roleGuard('stampar')],
+  },
+  {
+    path: 'stampar/licitacije',
+    component: StamparLicitacijeComponent,
     canActivate: [roleGuard('stampar')],
   },
   {

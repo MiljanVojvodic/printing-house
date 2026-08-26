@@ -11,6 +11,9 @@
       <a routerLink="/proizvodi">Proizvodi</a>
       <a routerLink="/klijent/profil">Moj profil</a>
       <a routerLink="/klijent/arhiva">Arhiva proizvoda</a>
+      @if (korisnik.tip === 'pravno') {
+        <a routerLink="/klijent/javne-nabavke">Javne nabavke</a>
+      }
       <a routerLink="/korpa">Korpa ({{ brojStavkiUKorpi }})</a>
     }
     @if (korisnik && korisnik.tip === 'stampar') {
@@ -18,6 +21,7 @@
       <a routerLink="/stampar/proizvodi">Proizvodi i usluge</a>
       <a routerLink="/stampar/kolicine">Ažuriranje količina</a>
       <a routerLink="/stampar/narudzbine">Naručeni proizvodi</a>
+      <a routerLink="/stampar/licitacije">Licitacije</a>
     }
     @if (korisnik && korisnik.tip === 'admin') {
       <a routerLink="/admin/zahtevi">Zahtevi za registraciju</a>

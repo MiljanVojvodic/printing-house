@@ -1,0 +1,30 @@
+.nabavka-blok {
+  border: 1px solid #d7dbe0;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  max-width: 700px;
+}
+
+.klijent {
+  font-weight: 400;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+input[type='number'] {
+  width: 110px;
+}
+
+.greska {
+  color: #b00020;
+}
+
+.uspeh {
+  color: #1b7a1b;
+  margin-left: 0.5rem;
+}
+
+.ishod {
+  color: #1b7a1b;
+}
