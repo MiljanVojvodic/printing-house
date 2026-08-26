@@ -10,6 +10,7 @@
     @if (korisnik && (korisnik.tip === 'fizicko' || korisnik.tip === 'pravno')) {
       <a routerLink="/proizvodi">Proizvodi</a>
       <a routerLink="/klijent/profil">Moj profil</a>
+      <a routerLink="/klijent/arhiva">Arhiva proizvoda</a>
       <a routerLink="/korpa">Korpa ({{ brojStavkiUKorpi }})</a>
     }
     @if (korisnik && korisnik.tip === 'stampar') {

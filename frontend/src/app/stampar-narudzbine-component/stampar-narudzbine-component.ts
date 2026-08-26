@@ -32,6 +32,7 @@ export class StamparNarudzbineComponent implements OnInit {
       naruceno: 'Naručeno',
       u_stampi: 'U štampi',
       isporuceno: 'Isporučeno',
+      primljeno: 'Primljeno',
     };
     return nazivi[status] || status;
   }

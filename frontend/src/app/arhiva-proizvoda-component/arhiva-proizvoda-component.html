@@ -1,0 +1,76 @@
+<h2>Arhiva proizvoda</h2>
+<p><i>Isporučeni i primljeni proizvodi iz vaših porudžbina.</i></p>
+
+@if (poruka) {
+  <p class="greska">{{ poruka }}</p>
+}
+
+@if (redovi.length === 0) {
+  <p><i>Trenutno nemate isporučenih ni primljenih proizvoda.</i></p>
+} @else {
+  <table class="tabela-arhive">
+    <thead>
+      <tr>
+        <th (click)="sortiraj('datumNarudzbine')" class="sortirajuca-kolona">Datum ⇅</th>
+        <th (click)="sortiraj('naziv')" class="sortirajuca-kolona">Proizvod ⇅</th>
+        <th (click)="sortiraj('kolicina')" class="sortirajuca-kolona">Količina ⇅</th>
+        <th (click)="sortiraj('nazivStamparije')" class="sortirajuca-kolona">Štamparija ⇅</th>
+        <th>Status</th>
+        <th>Ocena i komentar</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (r of redovi; track r.invoiceId + r.proizvodId) {
+        <tr>
+          <td>{{ r.datumNarudzbine | date: 'dd.MM.yyyy' }}</td>
+          <td>{{ r.naziv }}</td>
+          <td>{{ r.kolicina }}</td>
+          <td>{{ r.nazivStamparije }} ({{ r.gradStamparije }})</td>
+          <td>
+            {{ statusNaziv(r.status) }}
+            @if (r.status === 'isporuceno') {
+              <br />
+              <button type="button" (click)="oznaciPrimljeno(r)">Označi kao primljeno</button>
+            }
+          </td>
+          <td>
+            @if (r.status === 'primljeno') {
+              <div class="recenzija-blok">
+                <label>
+                  <input
+                    type="radio"
+                    [name]="'reakcija-' + r.proizvodId"
+                    value="lajk"
+                    [(ngModel)]="odabranaReakcija[r.proizvodId]"
+                  />
+                  👍 Sviđa mi se
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    [name]="'reakcija-' + r.proizvodId"
+                    value="dislajk"
+                    [(ngModel)]="odabranaReakcija[r.proizvodId]"
+                  />
+                  👎 Ne sviđa mi se
+                </label>
+                <textarea
+                  rows="2"
+                  placeholder="Komentar (opciono)"
+                  [(ngModel)]="unetTekst[r.proizvodId]"
+                  [name]="'tekst-' + r.proizvodId"
+                ></textarea>
+                <button type="button" (click)="posaljiRecenziju(r)">
+                  {{ poslatoZaProizvod[r.proizvodId] ? 'Ažuriraj recenziju' : 'Pošalji recenziju' }}
+                </button>
+                @if (poslatoZaProizvod[r.proizvodId]) {
+                  <span class="uspeh">Sačuvano.</span>
+                }
+              </div>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

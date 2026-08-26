@@ -1,0 +1,32 @@
+.greska {
+  color: #b00020;
+}
+
+.uspeh {
+  color: #1b7a1b;
+  margin-left: 0.5rem;
+}
+
+.sortirajuca-kolona {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortirajuca-kolona:hover {
+  text-decoration: underline;
+}
+
+.recenzija-blok {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 220px;
+}
+
+.recenzija-blok label {
+  font-size: 0.9rem;
+}
+
+.recenzija-blok textarea {
+  width: 100%;
+}

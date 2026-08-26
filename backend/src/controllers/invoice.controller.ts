@@ -154,9 +154,9 @@ export class InvoiceController {
     }
   };
 
-  // Pomera fakturu na sledeci status u nizu (minimalni obim staje na
-  // "isporuceno" - "primljeno" postavlja klijent kroz Arhivu proizvoda,
-  // koja je deo punog obima).
+  // Pomera fakturu na sledeci status u nizu naruceno -> u_stampi -> isporuceno.
+  // Stampar ide samo do "isporuceno" - "primljeno" iskljucivo postavlja
+  // klijent kroz Arhivu proizvoda (drugi endpoint ispod).
   sledeciStatus = async (req: express.Request, res: express.Response) => {
     try {
       const niz = ["naruceno", "u_stampi", "isporuceno"];
@@ -173,6 +173,43 @@ export class InvoiceController {
       }
 
       faktura.status = niz[trenutniIndeks + 1] as any;
+      await faktura.save();
+      res.json(faktura);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  // Arhiva proizvoda: fakture klijenta koje su isporucene ili vec primljene.
+  arhivaProizvoda = async (req: express.Request, res: express.Response) => {
+    try {
+      const fakture = await InvoiceModel.find({
+        kupac: req.params.kupacId,
+        status: { $in: ["isporuceno", "primljeno"] },
+      })
+        .populate("stampar", "nazivInstitucije grad")
+        .sort({ datumNarudzbine: -1 });
+      res.json(fakture);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  // Klijent oznacava isporucenu fakturu kao primljenu.
+  oznaciPrimljeno = async (req: express.Request, res: express.Response) => {
+    try {
+      const faktura = await InvoiceModel.findById(req.params.id);
+      if (!faktura) {
+        return res.status(404).json({ message: "Faktura ne postoji." });
+      }
+      if (faktura.status !== "isporuceno") {
+        return res
+          .status(400)
+          .json({ message: "Faktura mora prvo biti isporucena." });
+      }
+      faktura.status = "primljeno";
       await faktura.save();
       res.json(faktura);
     } catch (err) {

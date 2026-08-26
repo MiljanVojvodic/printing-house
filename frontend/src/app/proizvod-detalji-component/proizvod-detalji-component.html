@@ -71,6 +71,22 @@
     </div>
   </div>
 
+  @if (komentari.length > 0) {
+    <section class="komentari-sekcija">
+      <h3>Poslednji komentari</h3>
+      <ul class="lista-komentara">
+        @for (k of komentari; track k._id) {
+          <li [class.moj-komentar]="k.korIsmenaKlijenta === mojKorIme">
+            <strong>{{ k.korIsmenaKlijenta }}</strong>
+            <span class="datum-komentara">{{ k.datum | date: 'dd.MM.yyyy' }}</span>
+            <span class="reakcija-ikonica">{{ k.tipReakcije === 'lajk' ? '👍' : '👎' }}</span>
+            <p>{{ k.tekst }}</p>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
   <p><a routerLink="/">← Nazad na početnu</a></p>
 } @else if (ucitavanjeNeuspesno) {
   <p class="greska">Proizvod ne postoji.</p>

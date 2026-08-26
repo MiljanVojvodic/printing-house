@@ -39,4 +39,12 @@ export class InvoiceService {
   sledeciStatus(fakturaId: string) {
     return this.http.post<Invoice>(`${this.uri}/sledeci-status/${fakturaId}`, {});
   }
+
+  arhivaProizvoda(kupacId: string) {
+    return this.http.get<Invoice[]>(`${this.uri}/arhiva/${kupacId}`);
+  }
+
+  oznaciPrimljeno(fakturaId: string) {
+    return this.http.post<Invoice>(`${this.uri}/oznaci-primljeno/${fakturaId}`, {});
+  }
 }

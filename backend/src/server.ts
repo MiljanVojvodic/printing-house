@@ -6,6 +6,7 @@ import userRouter from "./routers/user.router";
 import productRouter from "./routers/product.router";
 import categoryRouter from "./routers/category.router";
 import invoiceRouter from "./routers/invoice.router";
+import recenzijaRouter from "./routers/recenzija.router";
 
 const app = express();
 app.use(cors());
@@ -23,6 +24,7 @@ router.use("/users", userRouter);
 router.use("/products", productRouter);
 router.use("/categories", categoryRouter);
 router.use("/invoices", invoiceRouter);
+router.use("/recenzije", recenzijaRouter);
 
 app.use("/", router);
 

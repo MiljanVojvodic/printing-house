@@ -15,6 +15,7 @@ import { StamparKolicineComponent } from './stampar-kolicine-component/stampar-k
 import { StamparNarudzbineComponent } from './stampar-narudzbine-component/stampar-narudzbine-component';
 import { AdminNaloziComponent } from './admin-nalozi-component/admin-nalozi-component';
 import { AdminKategorijeComponent } from './admin-kategorije-component/admin-kategorije-component';
+import { ArhivaProizvodaComponent } from './arhiva-proizvoda-component/arhiva-proizvoda-component';
 import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
@@ -37,6 +38,11 @@ export const routes: Routes = [
   {
     path: 'klijent/profil',
     component: KlijentProfilComponent,
+    canActivate: [roleGuard('fizicko', 'pravno')],
+  },
+  {
+    path: 'klijent/arhiva',
+    component: ArhivaProizvodaComponent,
     canActivate: [roleGuard('fizicko', 'pravno')],
   },
   {

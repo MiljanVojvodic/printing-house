@@ -18,4 +18,12 @@ invoiceRouter
   .route("/sledeci-status/:id")
   .post((req, res) => new InvoiceController().sledeciStatus(req, res));
 
+invoiceRouter
+  .route("/arhiva/:kupacId")
+  .get((req, res) => new InvoiceController().arhivaProizvoda(req, res));
+
+invoiceRouter
+  .route("/oznaci-primljeno/:id")
+  .post((req, res) => new InvoiceController().oznaciPrimljeno(req, res));
+
 export default invoiceRouter;
