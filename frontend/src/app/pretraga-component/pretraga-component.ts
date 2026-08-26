@@ -25,6 +25,7 @@ export class PretragaComponent implements OnInit {
   rezultati: Proizvod[] = [];
   pretragaIzvrsena = false;
 
+  private sortKolona: 'naziv' | 'kategorija' | null = null;
   private sortRastuce = true;
 
   ngOnInit(): void {
@@ -41,12 +42,16 @@ export class PretragaComponent implements OnInit {
     });
   }
 
-  sortirajPoNazivu() {
-    this.sortRastuce = !this.sortRastuce;
-    this.rezultati = [...this.rezultati].sort((a, b) =>
-      this.sortRastuce
-        ? a.naziv.localeCompare(b.naziv, 'sr')
-        : b.naziv.localeCompare(a.naziv, 'sr')
-    );
+  sortiraj(kolona: 'naziv' | 'kategorija') {
+    this.sortRastuce = this.sortKolona === kolona ? !this.sortRastuce : true;
+    this.sortKolona = kolona;
+
+    const vrednost = (p: Proizvod) =>
+      kolona === 'naziv' ? p.naziv : p.podkategorija || p.kategorija;
+
+    this.rezultati = [...this.rezultati].sort((a, b) => {
+      const rezultat = vrednost(a).localeCompare(vrednost(b), 'sr');
+      return this.sortRastuce ? rezultat : -rezultat;
+    });
   }
 }
