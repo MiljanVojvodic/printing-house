@@ -7,7 +7,7 @@ import { Korisnik } from '../models/korisnik';
 import { Invoice } from '../models/invoice';
 import { UPLOADS_URL } from '../services/api-config';
 
-type SortKolona = 'datumNarudzbine' | 'nazivStamparije' | 'grad' | 'ukupanIznos';
+type SortKolona = 'datumNarudzbine' | 'nazivStamparije' | 'grad' | 'ukupanIznos' | 'status';
 
 @Component({
   selector: 'app-klijent-profil-component',
@@ -105,6 +105,7 @@ export class KlijentProfilComponent implements OnInit {
   private vrednostZaSortiranje(f: Invoice, kolona: SortKolona): string | number {
     if (kolona === 'ukupanIznos') return f.ukupanIznos;
     if (kolona === 'datumNarudzbine') return f.datumNarudzbine;
+    if (kolona === 'status') return this.statusNaziv(f.status);
     if (typeof f.stampar === 'object') {
       return kolona === 'grad' ? f.stampar.grad : f.stampar.nazivInstitucije;
     }
