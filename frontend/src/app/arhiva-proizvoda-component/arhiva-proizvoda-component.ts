@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth-service';
 import { InvoiceService } from '../services/invoice-service';
@@ -22,7 +22,7 @@ type SortKolona = 'datumNarudzbine' | 'naziv' | 'kolicina' | 'nazivStamparije';
 
 @Component({
   selector: 'app-arhiva-proizvoda-component',
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, NgClass],
   templateUrl: './arhiva-proizvoda-component.html',
   styleUrl: './arhiva-proizvoda-component.css',
 })

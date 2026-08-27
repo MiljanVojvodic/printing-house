@@ -32,3 +32,24 @@
   /* Fiksna velicina - korisnik ne moze da je razvuce i pokvari izgled tabele. */
   resize: none;
 }
+
+/* Isti bedz stil kao na strani "Moj profil" i stampareva "Naruceni
+   proizvodi" - boja prati logican tok od "u toku" ka "zavrseno". */
+.status-bedz {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-isporuceno {
+  background: #cffafe;
+  color: #0e7490;
+}
+
+.status-primljeno {
+  background: #dcfce7;
+  color: #15803d;
+}

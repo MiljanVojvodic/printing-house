@@ -27,7 +27,7 @@
           <td>{{ r.kolicina }}</td>
           <td>{{ r.nazivStamparije }} ({{ r.gradStamparije }})</td>
           <td>
-            {{ statusNaziv(r.status) }}
+            <span class="status-bedz" [ngClass]="'status-' + r.status">{{ statusNaziv(r.status) }}</span>
             @if (r.status === 'isporuceno') {
               <br />
               <button type="button" (click)="oznaciPrimljeno(r)">Označi kao primljeno</button>
