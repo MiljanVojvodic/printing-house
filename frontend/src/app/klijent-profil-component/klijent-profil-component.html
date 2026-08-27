@@ -102,7 +102,9 @@
             </ol>
           </td>
           <td>{{ f.ukupanIznos }}</td>
-          <td>{{ statusNaziv(f.status) }}</td>
+          <td>
+            <span class="status-bedz" [ngClass]="'status-' + f.status">{{ statusNaziv(f.status) }}</span>
+          </td>
         </tr>
       }
     </tbody>

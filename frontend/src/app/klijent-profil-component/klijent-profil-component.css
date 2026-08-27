@@ -57,3 +57,34 @@
   margin: 0;
   padding-left: 1.1rem;
 }
+
+/* Bedz za status porudzbine - boja prati logican tok od "u toku" ka
+   "zavrseno", tako da se stanje porudzbine prepoznaje na prvi pogled. */
+.status-bedz {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-naruceno {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.status-u_stampi {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-isporuceno {
+  background: #cffafe;
+  color: #0e7490;
+}
+
+.status-primljeno {
+  background: #dcfce7;
+  color: #15803d;
+}

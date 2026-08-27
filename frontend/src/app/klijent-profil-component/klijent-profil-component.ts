@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth-service';
 import { UserService } from '../services/user-service';
@@ -11,7 +12,7 @@ type SortKolona = 'datumNarudzbine' | 'nazivStamparije' | 'grad' | 'ukupanIznos'
 
 @Component({
   selector: 'app-klijent-profil-component',
-  imports: [FormsModule],
+  imports: [FormsModule, NgClass],
   templateUrl: './klijent-profil-component.html',
   styleUrl: './klijent-profil-component.css',
 })
