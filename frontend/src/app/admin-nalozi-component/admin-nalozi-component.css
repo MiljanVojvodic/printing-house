@@ -10,6 +10,19 @@ button {
   margin-right: 0.5rem;
 }
 
+/* Dugmici Izmeni/Obriši u tabeli naloga - flex sa gap-om obezbedjuje
+   razmak i kada su jedan pored drugog i kada se, zbog uske kolone,
+   prelome jedan ispod drugog (margin-right sam po sebi to ne resava). */
+.akcije-naloga {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.akcije-naloga button {
+  margin-right: 0;
+}
+
 .panel-izmene {
   margin-top: 1.5rem;
   padding: 1rem;

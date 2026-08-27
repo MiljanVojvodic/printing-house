@@ -27,8 +27,10 @@
         <td>{{ k.mejl }}</td>
         <td>{{ statusNaziv(k.status) }}</td>
         <td>
-          <button type="button" (click)="izmeni(k)">Izmeni</button>
-          <button type="button" (click)="obrisi(k)">Obriši</button>
+          <div class="akcije-naloga">
+            <button type="button" (click)="izmeni(k)">Izmeni</button>
+            <button type="button" (click)="obrisi(k)">Obriši</button>
+          </div>
         </td>
       </tr>
     }
