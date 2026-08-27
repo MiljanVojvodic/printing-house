@@ -16,6 +16,7 @@
 
 .polje-red {
   display: flex;
+  align-items: flex-end;
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 0.75rem;

@@ -95,10 +95,22 @@
     }
 
     <div class="polje-red">
-      <input type="text" placeholder="Naziv usluge" [(ngModel)]="novaUsluga.naziv" name="uslugaNaziv" />
-      <input type="number" placeholder="Maks. širina mm" [(ngModel)]="novaUsluga.maxSirinaMm" name="uslugaSirina" />
-      <input type="number" placeholder="Maks. visina mm" [(ngModel)]="novaUsluga.maxVisinaMm" name="uslugaVisina" />
-      <input type="number" placeholder="Dodatna cena/kom" [(ngModel)]="novaUsluga.dodatnaCenaPoKomadu" name="uslugaCena" />
+      <div class="polje">
+        <label for="uslugaNaziv">Naziv usluge</label>
+        <input id="uslugaNaziv" type="text" placeholder="npr. Direktna štampa na tekstil" [(ngModel)]="novaUsluga.naziv" name="uslugaNaziv" />
+      </div>
+      <div class="polje">
+        <label for="uslugaSirina">Maks. širina (mm)</label>
+        <input id="uslugaSirina" type="number" [(ngModel)]="novaUsluga.maxSirinaMm" name="uslugaSirina" />
+      </div>
+      <div class="polje">
+        <label for="uslugaVisina">Maks. visina (mm)</label>
+        <input id="uslugaVisina" type="number" [(ngModel)]="novaUsluga.maxVisinaMm" name="uslugaVisina" />
+      </div>
+      <div class="polje">
+        <label for="uslugaCena">Dodatna cena/kom (RSD)</label>
+        <input id="uslugaCena" type="number" [(ngModel)]="novaUsluga.dodatnaCenaPoKomadu" name="uslugaCena" />
+      </div>
       <button type="button" (click)="dodajUslugu()">Dodaj uslugu</button>
     </div>
   </fieldset>
