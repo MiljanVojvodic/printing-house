@@ -25,7 +25,11 @@ export class HeaderComponent {
   }
 
   odjaviSe() {
+    // Tip citamo pre odjave (posle odjave getter vise nema koga da vrati),
+    // da bismo administratora vratili na admin ekran za prijavu, a ostale
+    // korisnike na obican ekran za prijavu.
+    const jeAdmin = this.korisnik?.tip === 'admin';
     this.authService.odjaviSe();
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl(jeAdmin ? '/administracija/prijava' : '/prijava');
   }
 }
