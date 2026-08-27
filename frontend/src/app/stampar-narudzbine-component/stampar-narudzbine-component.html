@@ -27,9 +27,11 @@
             </ol>
           </td>
           <td>{{ f.ukupanIznos }}</td>
-          <td>{{ statusNaziv(f.status) }}</td>
           <td>
-            @if (f.status !== 'isporuceno') {
+            <span class="status-bedz" [ngClass]="'status-' + f.status">{{ statusNaziv(f.status) }}</span>
+          </td>
+          <td>
+            @if (f.status === 'naruceno' || f.status === 'u_stampi') {
               <button type="button" (click)="pomeriStatus(f)">
                 @if (f.status === 'naruceno') { Prebaci u štampu }
                 @else { Označi kao isporučeno }

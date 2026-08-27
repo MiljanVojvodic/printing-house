@@ -1,11 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { AuthService } from '../services/auth-service';
 import { InvoiceService } from '../services/invoice-service';
 import { Invoice } from '../models/invoice';
 
 @Component({
   selector: 'app-stampar-narudzbine-component',
-  imports: [],
+  imports: [NgClass],
   templateUrl: './stampar-narudzbine-component.html',
   styleUrl: './stampar-narudzbine-component.css',
 })
