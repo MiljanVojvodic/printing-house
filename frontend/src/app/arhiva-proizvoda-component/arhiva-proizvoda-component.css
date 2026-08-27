@@ -29,4 +29,6 @@
 
 .recenzija-blok textarea {
   width: 100%;
+  /* Fiksna velicina - korisnik ne moze da je razvuce i pokvari izgled tabele. */
+  resize: none;
 }
