@@ -49,6 +49,13 @@ table th {
   background: #e9edf2;
 }
 
+/* Razmak kad dugme ide odmah ispod tabele (npr. DALJE, POTVRDI, Posalji
+   ponudu...) - bez ovoga dugme lepi uz donju ivicu tabele. */
+table + button,
+table + input[type='submit'] {
+  margin-top: 1rem;
+}
+
 input,
 select,
 textarea {
