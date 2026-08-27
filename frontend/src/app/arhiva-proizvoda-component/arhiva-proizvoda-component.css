@@ -29,8 +29,7 @@
 
 .recenzija-blok textarea {
   width: 100%;
-  /* Fiksna velicina - korisnik ne moze da je razvuce i pokvari izgled tabele. */
-  resize: none;
+  /* resize: none je sada globalno (styles.css) za sve textarea elemente. */
 }
 
 /* Isti bedz stil kao na strani "Moj profil" i stampareva "Naruceni

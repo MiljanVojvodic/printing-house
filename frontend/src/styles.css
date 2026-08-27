@@ -66,6 +66,12 @@ textarea {
   border-radius: 4px;
 }
 
+/* Nijedan textarea na sajtu nije rucno rastegljiv - korisnik ga ne moze
+   razvuci i pokvariti izgled forme/tabele oko njega. */
+textarea {
+  resize: none;
+}
+
 button,
 input[type='submit'],
 input[type='button'] {
