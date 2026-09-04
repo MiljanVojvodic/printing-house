@@ -33,6 +33,11 @@ export class ProizvodDetaljiComponent implements OnInit {
   odabranaBoja = '';
   odabraniTipStampe = '';
 
+  // Galerija: glavna slika + do 3 dodatne (tzv. thumbnail) - vidi tekst
+  // projekta. Izbor korisnika (koja je trenutno "glavna") se pamti u
+  // kolacicu veb pregledaca, po proizvodu, i ucitava pri sledecoj poseti.
+  odabraniIndeks = 0;
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
@@ -43,6 +48,7 @@ export class ProizvodDetaljiComponent implements OnInit {
       next: (p) => {
         this.proizvod = p;
         this.odabranaBoja = p.boje.length > 0 ? p.boje[0] : 'Bela';
+        this.odabraniIndeks = this.ucitajOdabraniIndeksIzKolacica(id, p.slike.length);
       },
       error: () => (this.ucitavanjeNeuspesno = true),
     });
@@ -55,9 +61,38 @@ export class ProizvodDetaljiComponent implements OnInit {
     return this.authService.trenutniKorisnik()?.kor_ime || '';
   }
 
+  // Tekst projekta trazi glavnu sliku + najvise 3 dodatne (ukupno do 4).
+  get galerijaSlike(): string[] {
+    return this.proizvod ? this.proizvod.slike.slice(0, 4) : [];
+  }
+
   get glavnaSlikaUrl(): string | null {
-    if (!this.proizvod || this.proizvod.slike.length === 0) return null;
-    return `${UPLOADS_URL}/${this.proizvod.slike[0]}`;
+    const slike = this.galerijaSlike;
+    return slike.length > 0 ? `${UPLOADS_URL}/${slike[this.odabraniIndeks]}` : null;
+  }
+
+  // Thumbnail traka prikazuje ostale slike iz galerije (ne i trenutno
+  // odabranu glavnu) - klik na jednu je "uvecava", tj. postavlja kao glavnu.
+  get dodatneSlike(): { url: string; indeks: number }[] {
+    return this.galerijaSlike
+      .map((s, i) => ({ url: `${UPLOADS_URL}/${s}`, indeks: i }))
+      .filter((s) => s.indeks !== this.odabraniIndeks);
+  }
+
+  izaberiSliku(indeks: number) {
+    if (!this.proizvod) return;
+    this.odabraniIndeks = indeks;
+    document.cookie = `glavna_slika_${this.proizvod._id}=${indeks}; path=/; max-age=31536000`;
+  }
+
+  private ucitajOdabraniIndeksIzKolacica(proizvodId: string, brojSlika: number): number {
+    const par = document.cookie
+      .split('; ')
+      .find((red) => red.startsWith(`glavna_slika_${proizvodId}=`));
+    if (!par) return 0;
+    const vrednost = Number(par.split('=')[1]);
+    const maksIndeks = Math.min(brojSlika, 4) - 1;
+    return Number.isInteger(vrednost) && vrednost >= 0 && vrednost <= maksIndeks ? vrednost : 0;
   }
 
   get jeKlijent(): boolean {
