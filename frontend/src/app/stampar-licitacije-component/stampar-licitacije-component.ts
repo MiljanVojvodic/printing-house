@@ -58,6 +58,10 @@ export class StamparLicitacijeComponent implements OnInit {
     return typeof n.pobednik === 'object' && n.pobednik ? n.pobednik.nazivInstitucije : '';
   }
 
+  izvestajUrl(n: JavnaNabavka): string {
+    return this.javnaNabavkaService.izvestajUrl(n._id);
+  }
+
   posaljiPonudu(n: JavnaNabavka) {
     const korisnik = this.authService.trenutniKorisnik();
     if (!korisnik) return;

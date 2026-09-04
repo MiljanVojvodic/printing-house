@@ -5,6 +5,7 @@ import InvoiceModel from "../models/invoice";
 import UserModel from "../models/user";
 import ProductModel from "../models/product";
 import { posaljiMejl } from "../utils/mailer";
+import { generisiIzvestajPdf } from "../utils/izvestaj-pdf";
 
 const TRAJANJE_MINUTA = 10;
 
@@ -267,6 +268,77 @@ export class JavnaNabavkaController {
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Doslo je do greske prilikom slanja ponude." });
+    }
+  };
+
+  // PDF izvestaj o zatvorenoj licitaciji - sve pristigle ponude i pobednik
+  // (najniza ukupna cena). Generise se na licu mesta, bez cuvanja na disk.
+  izvestajPdf = async (req: express.Request, res: express.Response) => {
+    try {
+      await zatvoriIstekleNabavke();
+
+      const nabavka = await JavnaNabavkaModel.findById(req.params.id).populate(
+        "klijent",
+        "nazivInstitucije"
+      );
+      if (!nabavka) {
+        return res.status(404).json({ message: "Javna nabavka ne postoji." });
+      }
+      if (nabavka.status !== "zatvorena") {
+        return res.status(400).json({
+          message: "Izvestaj je dostupan tek nakon zatvaranja licitacije.",
+        });
+      }
+
+      const ponude = await PonudaModel.find({ javnaNabavka: nabavka._id }).populate(
+        "stampar",
+        "nazivInstitucije"
+      );
+
+      const pobednikId = nabavka.pobednik ? String(nabavka.pobednik) : null;
+
+      const podaciPonude = ponude.map((p) => {
+        const stampar = p.stampar as any;
+        return {
+          stamparNaziv: stampar?.nazivInstitucije || "Nepoznata stamparija",
+          ukupnaCena: p.ukupnaCena!,
+          datumSlanja: p.datumSlanja!,
+          pobednik: pobednikId === String(stampar?._id ?? p.stampar),
+          stavke: p.stavke!.map((s) => {
+            const trazena = nabavka.stavke!.find(
+              (tz) => String(tz.proizvod) === String(s.proizvod)
+            );
+            return {
+              naziv: trazena ? trazena.naziv! : "Nepoznat proizvod",
+              cenaPoJedinici: s.cenaPoJedinici!,
+              dostupnaKolicina: s.dostupnaKolicina!,
+            };
+          }),
+        };
+      });
+
+      const pdfBuffer = await generisiIzvestajPdf({
+        nabavkaId: String(nabavka._id),
+        datumRaspisivanja: nabavka.datumRaspisivanja!,
+        klijentNaziv: (nabavka.klijent as any)?.nazivInstitucije || "",
+        trazeneStavke: nabavka.stavke!.map((s) => ({
+          naziv: s.naziv!,
+          kolicina: s.kolicina!,
+        })),
+        ponude: podaciPonude,
+        pobednikNaziv: podaciPonude.find((p) => p.pobednik)?.stamparNaziv || null,
+        ukupanIznosPobednika: nabavka.ukupanIznosPobednika ?? null,
+      });
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="izvestaj-${nabavka._id}.pdf"`
+      );
+      res.send(pdfBuffer);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske prilikom generisanja izvestaja." });
     }
   };
 }
