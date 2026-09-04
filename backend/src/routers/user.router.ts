@@ -32,6 +32,18 @@ userRouter
   );
 
 userRouter
+  .route("/zaboravljena-lozinka")
+  .post((req, res) => new UserController().zatraziResetLozinke(req, res));
+
+userRouter
+  .route("/zaboravljena-lozinka/:token")
+  .get((req, res) => new UserController().proveriTokenReset(req, res));
+
+userRouter
+  .route("/nova-lozinka")
+  .post((req, res) => new UserController().postaviNovuLozinku(req, res));
+
+userRouter
   .route("/svi")
   .get((req, res) => new UserController().sviKorisnici(req, res));
 

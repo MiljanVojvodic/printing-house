@@ -37,6 +37,25 @@ export class UserService {
     return this.http.put<Korisnik>(`${this.uri}/profil/${kor_ime}`, podaci);
   }
 
+  zatraziResetLozinke(korIsmeIliMejl: string) {
+    return this.http.post<{ message: string }>(`${this.uri}/zaboravljena-lozinka`, {
+      korIsmeIliMejl,
+    });
+  }
+
+  proveriTokenReset(token: string) {
+    return this.http.get<{ validan: boolean }>(
+      `${this.uri}/zaboravljena-lozinka/${token}`
+    );
+  }
+
+  postaviNovuLozinku(token: string, lozinka: string) {
+    return this.http.post<{ message: string }>(`${this.uri}/nova-lozinka`, {
+      token,
+      lozinka,
+    });
+  }
+
   // --- Admin ---
 
   sviKorisnici() {

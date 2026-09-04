@@ -1,0 +1,33 @@
+<h2>Zaboravljena lozinka</h2>
+
+@if (uspesnaPoruka) {
+  <p class="uspeh">{{ uspesnaPoruka }}</p>
+} @else {
+  <p>
+    Unesite korisničko ime ili mejl adresu naloga. Ako nalog postoji, poslaćemo vam mejl sa
+    linkom za postavljanje nove lozinke (link važi 5 minuta).
+  </p>
+
+  <form #f="ngForm" (ngSubmit)="posalji(f)">
+    <div class="polje">
+      <label for="korIsmeIliMejl">Korisničko ime ili mejl</label>
+      <input
+        id="korIsmeIliMejl"
+        type="text"
+        name="korIsmeIliMejl"
+        required
+        [(ngModel)]="korIsmeIliMejl"
+      />
+    </div>
+
+    @if (poruka) {
+      <p class="greska">{{ poruka }}</p>
+    }
+
+    <button type="submit" [disabled]="slanjeUToku">
+      {{ slanjeUToku ? 'Slanje...' : 'Pošalji' }}
+    </button>
+  </form>
+}
+
+<p><a routerLink="/prijava">← Nazad na prijavu</a></p>

@@ -63,6 +63,20 @@ let User = new Schema({
     unique: true,
     sparse: true,
   },
+
+  // Reset zaboravljene lozinke - resetTokenHash je SHA-256 heš privremenog
+  // tokena (ne bcrypt, jer bcrypt je namerno soljen/nedeterministican pa se
+  // ne moze pretraziti po vrednosti - ovde nam treba findOne po hesu).
+  // Token vazi 5 minuta (resetTokenIstice), postavlja se pri zahtevu za
+  // reset i brise nakon uspesne promene lozinke.
+  resetTokenHash: {
+    type: String,
+    default: null,
+  },
+  resetTokenIstice: {
+    type: Date,
+    default: null,
+  },
 });
 
 export default mongoose.model("UserModel", User, "users");

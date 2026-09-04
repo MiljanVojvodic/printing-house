@@ -72,6 +72,11 @@ Dodatna polja **samo** za `tip: "pravno"` i `tip: "stampar"`: `nazivInstitucije`
 `adresa` (string), `grad` (string), `maticniBroj` (string, unique, tačno 8 cifara), `pib`
 (string, unique, tačno 9 cifara, ne počinje sa 0).
 
+Polja za reset zaboravljene lozinke: `resetTokenHash` (string, SHA-256 heš privremenog tokena,
+`null` kad nije aktivan zahtev za reset) i `resetTokenIstice` (datum isteka, 5 minuta od zahteva).
+Ne treba ih ručno postavljati — postavlja ih i briše aplikacija sama kroz tok resetovanja
+lozinke.
+
 Za sada ubaci samo admin nalog (registracija ostalih korisnika ide kroz aplikaciju od Faze 1
 nadalje, pa ćeš njih dodavati kroz UI, ne ručno):
 
