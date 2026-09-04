@@ -1,13 +1,28 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import * as L from 'leaflet';
 import { ProductService } from '../services/product-service';
 import { AuthService } from '../services/auth-service';
 import { RecenzijaService } from '../services/recenzija-service';
+import { GradKoordinateService } from '../services/grad-koordinate-service';
 import { Proizvod } from '../models/proizvod';
 import { Recenzija } from '../models/recenzija';
 import { UPLOADS_URL } from '../services/api-config';
+
+// Podrazumevana Leaflet ikonica markera koristi relativne putanje ka
+// slikama koje bundler (esbuild/Angular build) ne razresava ispravno, pa
+// se rucno postavljaju na slike kopirane u public/leaflet (vidi
+// frontend/public/leaflet/*.png) i posluzene sa apsolutnom putanjom -
+// mora biti apsolutna (ne relativna), jer je trenutna ruta npr.
+// "/proizvodi/<id>", pa bi se relativna putanja pogresno razresila.
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: '/leaflet/marker-icon-2x.png',
+  iconUrl: '/leaflet/marker-icon.png',
+  shadowUrl: '/leaflet/marker-shadow.png',
+});
 
 // Javno vidljiva strana detalja proizvoda (naziv, stamparija, grad,
 // lajkovi/dislajkovi, glavna slika). Za ulogovanog klijenta (fizicko/
@@ -19,12 +34,25 @@ import { UPLOADS_URL } from '../services/api-config';
   templateUrl: './proizvod-detalji-component.html',
   styleUrl: './proizvod-detalji-component.css',
 })
-export class ProizvodDetaljiComponent implements OnInit {
+export class ProizvodDetaljiComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private productService = inject(ProductService);
   private authService = inject(AuthService);
   private recenzijaService = inject(RecenzijaService);
+  private gradKoordinateService = inject(GradKoordinateService);
+
+  private mapa: L.Map | null = null;
+
+  // Kontejner za mapu se pojavljuje u DOM-u tek kad su proizvod i jeKlijent
+  // istovremeno tacni (@if u template-u) - setter na ViewChild-u se poziva
+  // upravo u tom trenutku, sto je jednostavniji nacin da se sacekaju oba
+  // uslova nego rucno pracenje AfterViewInit + async ucitavanje proizvoda.
+  @ViewChild('mapaKontejner') set mapaKontejnerRef(el: ElementRef<HTMLDivElement> | undefined) {
+    if (el) {
+      this.inicijalizujMapu(el.nativeElement);
+    }
+  }
 
   proizvod: Proizvod | null = null;
   ucitavanjeNeuspesno = false;
@@ -93,6 +121,27 @@ export class ProizvodDetaljiComponent implements OnInit {
     const vrednost = Number(par.split('=')[1]);
     const maksIndeks = Math.min(brojSlika, 4) - 1;
     return Number.isInteger(vrednost) && vrednost >= 0 && vrednost <= maksIndeks ? vrednost : 0;
+  }
+
+  private inicijalizujMapu(el: HTMLDivElement) {
+    if (this.mapa || !this.proizvod) return;
+    const [lat, lng] = this.gradKoordinateService.koordinateZaGrad(this.proizvod.gradStamparije);
+    this.mapa = L.map(el).setView([lat, lng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(this.mapa);
+    L.marker([lat, lng])
+      .addTo(this.mapa)
+      .bindPopup(`${this.proizvod.nazivStamparije}<br>${this.proizvod.gradStamparije}`);
+    // Kontejner ponekad promeni sirinu nakon prvog iscrtavanja mape (npr.
+    // kad se ucita glavna slika proizvoda pa se promeni layout kolone) -
+    // invalidateSize sprecava da mapa ostane pogresno iseckana/siva.
+    setTimeout(() => this.mapa?.invalidateSize(), 0);
+  }
+
+  ngOnDestroy(): void {
+    this.mapa?.remove();
   }
 
   get jeKlijent(): boolean {
