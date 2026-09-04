@@ -2,6 +2,8 @@ import express from "express";
 import InvoiceModel from "../models/invoice";
 import ProductModel from "../models/product";
 import UserModel from "../models/user";
+import { generisiFakturuPdf } from "../utils/faktura-pdf";
+import { posaljiMejl } from "../utils/mailer";
 
 export class InvoiceController {
   mojeNarudzbine = async (req: express.Request, res: express.Response) => {
@@ -80,7 +82,7 @@ export class InvoiceController {
       });
       const stamparijaMapa = new Map(stamparije.map((s) => [s.kor_ime, s]));
 
-      const kreiraneFakture = [];
+      const kreiraneFakture: { faktura: InstanceType<typeof InvoiceModel>; stampar: InstanceType<typeof UserModel> }[] = [];
 
       for (const [korIme, lista] of grupePoStampariji) {
         const stampar = stamparijaMapa.get(korIme);
@@ -118,7 +120,7 @@ export class InvoiceController {
           status: "naruceno",
         }).save();
 
-        kreiraneFakture.push(faktura);
+        kreiraneFakture.push({ faktura, stampar });
 
         for (const s of lista) {
           await ProductModel.updateOne(
@@ -134,6 +136,45 @@ export class InvoiceController {
         message: `Uspesno kreirano ${n} ${jednina}.`,
         brojFaktura: n,
       });
+
+      // Slanje mejla je pomocna funkcionalnost - ne sme da uspori niti da
+      // obori odgovor za samu narudzbinu (odgovor je vec poslat iznad).
+      // Generisanje PDF-a se cuva u memoriji (faktura-pdf.ts), bez pisanja
+      // na disk.
+      (async () => {
+        try {
+          const prilozi = await Promise.all(
+            kreiraneFakture.map(async ({ faktura, stampar }) => {
+              const pdfBuffer = await generisiFakturuPdf({
+                fakturaId: String(faktura._id),
+                datum: faktura.datumNarudzbine!,
+                kupacIme: `${kupac.ime} ${kupac.prezime}`,
+                stamparijaNaziv: stampar.nazivInstitucije || stampar.kor_ime!,
+                stamparijaGrad: stampar.grad || "",
+                stavke: faktura.stavke!.map((s) => ({
+                  naziv: s.naziv!,
+                  kolicina: s.kolicina!,
+                  cenaPoJedinici: s.cenaPoJedinici!,
+                  boja: s.boja ?? undefined,
+                  tipStampe: s.tipStampe ?? undefined,
+                  ukupnaCenaStavke: s.ukupnaCenaStavke!,
+                })),
+                ukupanIznos: faktura.ukupanIznos!,
+              });
+              return { filename: `faktura-${faktura._id}.pdf`, content: pdfBuffer };
+            })
+          );
+
+          posaljiMejl(
+            kupac.mejl!,
+            "Vasa narudzbina - Printing House",
+            `Hvala na narudzbini! U prilogu ${prilozi.length === 1 ? "se nalazi faktura" : "se nalaze " + prilozi.length + " fakture"} za Vasu porudzbinu.`,
+            prilozi
+          );
+        } catch (err) {
+          console.log("Greska pri generisanju/slanju PDF fakture na mejl:", err);
+        }
+      })();
     } catch (err) {
       console.log(err);
       res

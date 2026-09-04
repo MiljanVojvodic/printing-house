@@ -31,8 +31,13 @@ function dobaviTransporter(): Promise<nodemailer.Transporter> {
 }
 
 // Ne baca gresku na neuspeh slanja - mejl je pomocna funkcionalnost i ne
-// sme da blokira glavni tok (npr. raspisivanje licitacije).
-export async function posaljiMejl(to: string, subject: string, text: string) {
+// sme da blokira glavni tok (npr. raspisivanje licitacije, potvrda narudzbine).
+export async function posaljiMejl(
+  to: string,
+  subject: string,
+  text: string,
+  attachments?: { filename: string; content: Buffer }[]
+) {
   try {
     const transporter = await dobaviTransporter();
     const info = await transporter.sendMail({
@@ -40,6 +45,7 @@ export async function posaljiMejl(to: string, subject: string, text: string) {
       to,
       subject,
       text,
+      attachments,
     });
     const previewUrl = nodemailer.getTestMessageUrl(info);
     if (previewUrl) {
