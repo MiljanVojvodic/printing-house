@@ -1,0 +1,45 @@
+<h2>Nova lozinka</h2>
+
+@if (stanjeProvere === 'ucitavanje') {
+  <p>Proveravam link...</p>
+} @else if (stanjeProvere === 'nevalidan') {
+  <p class="greska">
+    Link za resetovanje lozinke je nevažeći ili je istekao (link važi 5 minuta od trenutka
+    zahteva).
+  </p>
+  <p><a routerLink="/zaboravljena-lozinka">Zatražite novi link</a></p>
+} @else if (uspesnaPoruka) {
+  <p class="uspeh">{{ uspesnaPoruka }}</p>
+  <p><a routerLink="/prijava">Prijavite se</a></p>
+} @else {
+  <form #f="ngForm" (ngSubmit)="posalji(f)">
+    <div class="polje">
+      <label for="lozinka">Nova lozinka *</label>
+      <input
+        id="lozinka"
+        type="password"
+        name="lozinka"
+        required
+        [(ngModel)]="lozinka"
+      />
+    </div>
+    <div class="polje">
+      <label for="lozinkaPotvrda">Potvrda nove lozinke *</label>
+      <input
+        id="lozinkaPotvrda"
+        type="password"
+        name="lozinkaPotvrda"
+        required
+        [(ngModel)]="lozinkaPotvrda"
+      />
+    </div>
+
+    @if (poruka) {
+      <p class="greska">{{ poruka }}</p>
+    }
+
+    <button type="submit" [disabled]="slanjeUToku">
+      {{ slanjeUToku ? 'Čuvanje...' : 'Postavi novu lozinku' }}
+    </button>
+  </form>
+}

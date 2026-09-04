@@ -1,7 +1,9 @@
 import express from "express";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import UserModel from "../models/user";
 import { proveriDimenzijeSlike } from "../middleware/upload";
+import { posaljiMejl } from "../utils/mailer";
 import {
   LOZINKA_REGEX,
   MATICNI_BROJ_REGEX,
@@ -9,6 +11,13 @@ import {
   MEJL_REGEX,
   validacionePoruke,
 } from "../utils/validators";
+
+const TRAJANJE_RESET_TOKENA_MINUTA = 5;
+const FRONTEND_URL = "http://localhost:4200";
+
+function hesirajToken(token: string) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
 
 const PRAVNI_TIPOVI = ["pravno", "stampar"];
 
@@ -168,6 +177,101 @@ export class UserController {
           .json({ message: "Pogresno korisnicko ime ili lozinka." });
       }
       return res.json(bezLozinke(user));
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  // Zahtev za reset zaboravljene lozinke. Namerno se vraca ista poruka bez
+  // obzira da li nalog postoji, da se ne otkriva postojanje naloga po
+  // unetom kor. imenu/mejlu. Ako nalog postoji, mejl sa linkom se salje
+  // (posaljiMejl ne baca gresku ako slanje ne uspe - vidi mailer.ts).
+  zatraziResetLozinke = async (req: express.Request, res: express.Response) => {
+    try {
+      const { korIsmeIliMejl } = req.body;
+      if (!korIsmeIliMejl) {
+        return res
+          .status(400)
+          .json({ message: "Unesite korisnicko ime ili mejl adresu." });
+      }
+
+      const user = await UserModel.findOne({
+        $or: [{ kor_ime: korIsmeIliMejl }, { mejl: korIsmeIliMejl }],
+      });
+
+      if (user) {
+        const token = crypto.randomBytes(32).toString("hex");
+        user.resetTokenHash = hesirajToken(token);
+        user.resetTokenIstice = new Date(
+          Date.now() + TRAJANJE_RESET_TOKENA_MINUTA * 60 * 1000
+        );
+        await user.save();
+
+        posaljiMejl(
+          user.mejl!,
+          "Resetovanje lozinke - Printing House",
+          `Zatrazeno je resetovanje lozinke za nalog "${user.kor_ime}". ` +
+            `Kliknite na sledeci link da postavite novu lozinku (link vazi ${TRAJANJE_RESET_TOKENA_MINUTA} minuta): ` +
+            `${FRONTEND_URL}/nova-lozinka/${token}\n\n` +
+            `Ako niste vi zatrazili ovo, slobodno ignorisite ovaj mejl.`
+        );
+      }
+
+      return res.json({
+        message:
+          "Ako nalog sa unetim podatkom postoji, poslat je mejl sa uputstvom za resetovanje lozinke.",
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  // Provera da li je token iz linka jos uvek validan - koristi frontend
+  // pri otvaranju strane za unos nove lozinke, pre nego sto korisnik pocne
+  // da kuca (bolje korisnicko iskustvo od greske tek nakon slanja forme).
+  proveriTokenReset = async (req: express.Request, res: express.Response) => {
+    try {
+      const tokenHash = hesirajToken(String(req.params.token));
+      const user = await UserModel.findOne({
+        resetTokenHash: tokenHash,
+        resetTokenIstice: { $gt: new Date() },
+      });
+      res.json({ validan: !!user });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
+  postaviNovuLozinku = async (req: express.Request, res: express.Response) => {
+    try {
+      const { token, lozinka } = req.body;
+      if (!token || !lozinka) {
+        return res.status(400).json({ message: "Nedostaju podaci." });
+      }
+      if (!LOZINKA_REGEX.test(lozinka)) {
+        return res.status(400).json({ message: validacionePoruke().lozinka });
+      }
+
+      const tokenHash = hesirajToken(token);
+      const user = await UserModel.findOne({
+        resetTokenHash: tokenHash,
+        resetTokenIstice: { $gt: new Date() },
+      });
+      if (!user) {
+        return res.status(400).json({
+          message: "Link za resetovanje lozinke je nevazeci ili je istekao.",
+        });
+      }
+
+      user.lozinka = await bcrypt.hash(lozinka, 10);
+      user.resetTokenHash = null;
+      user.resetTokenIstice = null;
+      await user.save();
+
+      res.json({ message: "Lozinka je uspesno promenjena. Mozete se prijaviti." });
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Doslo je do greske." });
