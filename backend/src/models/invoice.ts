@@ -37,7 +37,7 @@ let Invoice = new Schema({
   },
   status: {
     type: String,
-    enum: ["naruceno", "u_stampi", "isporuceno", "primljeno"],
+    enum: ["naruceno", "u_stampi", "isporuceno", "primljeno", "otkazano"],
     default: "naruceno",
   },
   datumNarudzbine: {

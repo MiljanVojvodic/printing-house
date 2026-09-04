@@ -153,8 +153,10 @@ par test proizvoda — zameni `"kreator"` ispod sa `kor_ime` štamparije koju re
 
 `kupac` (ObjectId → `users`), `stampar` (ObjectId → `users`), `stavke` (niz `{ proizvod,
 naziv, kolicina, cenaPoJedinici, boja, tipStampe, tekstPersonalizacije, ukupnaCenaStavke }`),
-`ukupanIznos` (broj), `status` (`"naruceno"` | `"u_stampi"` | `"isporuceno"`),
-`datumNarudzbine` (datum). Puni se kroz aplikaciju u Fazi 4 (klijent potvrđuje e-korpu).
+`ukupanIznos` (broj), `status` (`"naruceno"` | `"u_stampi"` | `"isporuceno"` | `"primljeno"` |
+`"otkazano"`), `datumNarudzbine` (datum). Puni se kroz aplikaciju u Fazi 4 (klijent potvrđuje
+e-korpu). Klijent može da otkaže porudžbinu (status → `"otkazano"`) samo dok je status još
+`"naruceno"`.
 
 ---
 
