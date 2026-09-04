@@ -5,6 +5,18 @@
     <div class="galerija">
       @if (glavnaSlikaUrl) {
         <img [src]="glavnaSlikaUrl" [alt]="proizvod.naziv" class="glavna-slika" />
+        @if (dodatneSlike.length > 0) {
+          <div class="thumbnail-traka">
+            @for (t of dodatneSlike; track t.indeks) {
+              <img
+                [src]="t.url"
+                [alt]="proizvod.naziv"
+                class="thumbnail"
+                (click)="izaberiSliku(t.indeks)"
+              />
+            }
+          </div>
+        }
       } @else {
         <div class="bez-slike">Nema slike</div>
       }
