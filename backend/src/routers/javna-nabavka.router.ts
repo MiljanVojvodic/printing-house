@@ -22,4 +22,8 @@ javnaNabavkaRouter
   .route("/:id/ponuda")
   .post((req, res) => new JavnaNabavkaController().posaljiPonudu(req, res));
 
+javnaNabavkaRouter
+  .route("/:id/izvestaj.pdf")
+  .get((req, res) => new JavnaNabavkaController().izvestajPdf(req, res));
+
 export default javnaNabavkaRouter;

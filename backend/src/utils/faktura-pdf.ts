@@ -1,4 +1,5 @@
 import PDFDocument from "pdfkit";
+import { postaviUnicodeFont } from "./pdf-fonts";
 
 interface StavkaZaPdf {
   naziv: string;
@@ -28,6 +29,7 @@ export function generisiFakturuPdf(podaci: PodaciZaFakturu): Promise<Buffer> {
     doc.on("data", (chunk) => chunkovi.push(chunk));
     doc.on("end", () => resolve(Buffer.concat(chunkovi)));
     doc.on("error", reject);
+    postaviUnicodeFont(doc);
 
     doc.fontSize(18).text("Printing House", { align: "center" });
     doc.fontSize(12).text("Faktura", { align: "center" });
@@ -35,9 +37,9 @@ export function generisiFakturuPdf(podaci: PodaciZaFakturu): Promise<Buffer> {
 
     doc.fontSize(10);
     doc.text(`Broj fakture: ${podaci.fakturaId}`);
-    doc.text(`Datum narudzbine: ${podaci.datum.toLocaleString("sr-RS")}`);
+    doc.text(`Datum narudžbine: ${podaci.datum.toLocaleString("sr-RS")}`);
     doc.text(`Kupac: ${podaci.kupacIme}`);
-    doc.text(`Stamparija: ${podaci.stamparijaNaziv} (${podaci.stamparijaGrad})`);
+    doc.text(`Štamparija: ${podaci.stamparijaNaziv} (${podaci.stamparijaGrad})`);
     doc.moveDown();
 
     doc.fontSize(12).text("Stavke", { underline: true });
