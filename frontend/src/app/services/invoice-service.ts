@@ -47,4 +47,8 @@ export class InvoiceService {
   oznaciPrimljeno(fakturaId: string) {
     return this.http.post<Invoice>(`${this.uri}/oznaci-primljeno/${fakturaId}`, {});
   }
+
+  otkaziNarudzbinu(fakturaId: string) {
+    return this.http.post<Invoice>(`${this.uri}/otkazi/${fakturaId}`, {});
+  }
 }

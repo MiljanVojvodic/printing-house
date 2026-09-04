@@ -9,7 +9,7 @@ export class StavkaFakture {
   ukupnaCenaStavke = 0;
 }
 
-export type StatusFakture = 'naruceno' | 'u_stampi' | 'isporuceno' | 'primljeno';
+export type StatusFakture = 'naruceno' | 'u_stampi' | 'isporuceno' | 'primljeno' | 'otkazano';
 
 export class Invoice {
   _id = '';

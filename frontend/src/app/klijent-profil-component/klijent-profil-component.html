@@ -86,6 +86,7 @@
         <th>Naručeni proizvodi</th>
         <th (click)="sortiraj('ukupanIznos')" class="sortirajuca-kolona">Ukupan iznos (RSD) ⇅</th>
         <th (click)="sortiraj('status')" class="sortirajuca-kolona">Status ⇅</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -105,8 +106,16 @@
           <td>
             <span class="status-bedz" [ngClass]="'status-' + f.status">{{ statusNaziv(f.status) }}</span>
           </td>
+          <td>
+            @if (f.status === 'naruceno') {
+              <button type="button" (click)="otkazi(f)">Otkaži</button>
+            }
+          </td>
         </tr>
       }
     </tbody>
   </table>
+  @if (porudzbinePoruka) {
+    <p class="greska">{{ porudzbinePoruka }}</p>
+  }
 }

@@ -26,4 +26,8 @@ invoiceRouter
   .route("/oznaci-primljeno/:id")
   .post((req, res) => new InvoiceController().oznaciPrimljeno(req, res));
 
+invoiceRouter
+  .route("/otkazi/:id")
+  .post((req, res) => new InvoiceController().otkaziNarudzbinu(req, res));
+
 export default invoiceRouter;

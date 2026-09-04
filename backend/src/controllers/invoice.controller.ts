@@ -197,6 +197,38 @@ export class InvoiceController {
     }
   };
 
+  // Klijent otkazuje fakturu - dozvoljeno samo dok stampa jos nije pocela
+  // (status "naruceno"), sto stiti sve kasnije statuse od otkazivanja.
+  // Kolicina rezervisana pri potvrdi narudzbine (potvrdiNarudzbinu) se vraca
+  // nazad na stanje proizvoda.
+  otkaziNarudzbinu = async (req: express.Request, res: express.Response) => {
+    try {
+      const faktura = await InvoiceModel.findById(req.params.id);
+      if (!faktura) {
+        return res.status(404).json({ message: "Faktura ne postoji." });
+      }
+      if (faktura.status !== "naruceno") {
+        return res.status(400).json({
+          message: "Porudzbina se moze otkazati samo dok jos nije preneta u stampu.",
+        });
+      }
+
+      for (const s of faktura.stavke!) {
+        await ProductModel.updateOne(
+          { _id: s.proizvod },
+          { $inc: { kolicinaNaStanju: s.kolicina } }
+        );
+      }
+
+      faktura.status = "otkazano";
+      await faktura.save();
+      res.json(faktura);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
   // Klijent oznacava isporucenu fakturu kao primljenu.
   oznaciPrimljeno = async (req: express.Request, res: express.Response) => {
     try {

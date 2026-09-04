@@ -28,6 +28,7 @@ export class KlijentProfilComponent implements OnInit {
   cuvanjeUToku = false;
 
   fakture: Invoice[] = [];
+  porudzbinePoruka = '';
   private sortKolona: SortKolona = 'datumNarudzbine';
   private sortRastuce = false;
 
@@ -127,7 +128,23 @@ export class KlijentProfilComponent implements OnInit {
       u_stampi: 'U štampi',
       isporuceno: 'Isporučeno',
       primljeno: 'Primljeno',
+      otkazano: 'Otkazano',
     };
     return nazivi[status] || status;
+  }
+
+  otkazi(f: Invoice) {
+    this.porudzbinePoruka = '';
+    if (!confirm('Da li sigurno želite da otkažete ovu porudžbinu?')) {
+      return;
+    }
+    this.invoiceService.otkaziNarudzbinu(f._id).subscribe({
+      next: (azurirana) => {
+        f.status = azurirana.status;
+      },
+      error: (err) => {
+        this.porudzbinePoruka = err?.error?.message || 'Došlo je do greške prilikom otkazivanja.';
+      },
+    });
   }
 }
