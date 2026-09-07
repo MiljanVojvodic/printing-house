@@ -6,9 +6,6 @@ import { CategoryService } from '../services/category-service';
 import { Proizvod } from '../models/proizvod';
 import { Kategorija } from '../models/kategorija';
 
-// Deljena komponenta za pretragu proizvoda - koristi je i nerigistrovani
-// korisnik (ugradjena na pocetnoj strani) i, od Faze 4, ulogovani klijent
-// (na sopstvenoj ruti /proizvodi).
 @Component({
   selector: 'app-pretraga-component',
   imports: [FormsModule, RouterLink],

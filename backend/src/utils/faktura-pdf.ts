@@ -20,8 +20,6 @@ interface PodaciZaFakturu {
   ukupanIznos: number;
 }
 
-// Generise PDF fakture u memoriji (bez cuvanja na disk) - stream se
-// sakuplja u Buffer koji se zatim salje kao prilog mejla (mailer.ts).
 export function generisiFakturuPdf(podaci: PodaciZaFakturu): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50 });

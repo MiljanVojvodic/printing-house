@@ -29,7 +29,6 @@ productRouter
   .route("/kolicina/:id")
   .put((req, res) => new ProductController().azurirajKolicinu(req, res));
 
-// Mora biti poslednja ruta - :id bi inace "pojeo" sve rute iznad.
 productRouter
   .route("/:id")
   .get((req, res) => new ProductController().getById(req, res));

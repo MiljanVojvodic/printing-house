@@ -9,13 +9,6 @@ import { generisiIzvestajPdf } from "../utils/izvestaj-pdf";
 
 const TRAJANJE_MINUTA = 10;
 
-// Nema tajmera ni WebSocket-a (nije potrebno po tekstu zadatka) - umesto
-// toga, svaki put kad neko procita podatke o javnim nabavkama, prvo se
-// zatvore sve kojima je istekao rok: bira se ponuda sa najnizom ukupnom
-// cenom medju onima koje pokrivaju trazenu kolicinu za SVAKU stavku,
-// fakturise se direktno u statusu "u_stampi" (bez plaćanja - taj korak je
-// van minimalnog obima), a ako nema validne ponude, nabavka se zatvara bez
-// pobednika.
 async function zatvoriIstekleNabavke() {
   const istekle = await JavnaNabavkaModel.find({
     status: "otvorena",
@@ -192,8 +185,6 @@ export class JavnaNabavkaController {
     }
   };
 
-  // Otvorene nabavke + istorija (zatvorene na kojima je ovaj stampar ucestvovao),
-  // sa ubacenom sopstvenom ponudom ako postoji.
   zaStampara = async (req: express.Request, res: express.Response) => {
     try {
       await zatvoriIstekleNabavke();
@@ -271,8 +262,6 @@ export class JavnaNabavkaController {
     }
   };
 
-  // PDF izvestaj o zatvorenoj licitaciji - sve pristigle ponude i pobednik
-  // (najniza ukupna cena). Generise se na licu mesta, bez cuvanja na disk.
   izvestajPdf = async (req: express.Request, res: express.Response) => {
     try {
       await zatvoriIstekleNabavke();

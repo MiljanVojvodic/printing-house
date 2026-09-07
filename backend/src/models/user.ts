@@ -42,8 +42,7 @@ let User = new Schema({
     enum: ["na_cekanju", "odobren", "odbijen"],
     default: "na_cekanju",
   },
-
-  // Samo za tip: "pravno" i "stampar"
+  //Za pravna lica
   nazivInstitucije: {
     type: String,
   },
@@ -64,11 +63,7 @@ let User = new Schema({
     sparse: true,
   },
 
-  // Reset zaboravljene lozinke - resetTokenHash je SHA-256 heš privremenog
-  // tokena (ne bcrypt, jer bcrypt je namerno soljen/nedeterministican pa se
-  // ne moze pretraziti po vrednosti - ovde nam treba findOne po hesu).
-  // Token vazi 5 minuta (resetTokenIstice), postavlja se pri zahtevu za
-  // reset i brise nakon uspesne promene lozinke.
+  //Reset lozinke
   resetTokenHash: {
     type: String,
     default: null,

@@ -89,10 +89,6 @@
   margin-left: 0.5rem;
 }
 
-/* Sopstveni komentar klijenta - diskretno uokviren narandzastom linijom.
-   Selektor mora biti bar isto toliko specifican kao ".lista-komentara li"
-   (klasa + element) - inace njegov border-bottom (siva linija) nadjaca
-   donju ivicu ovog okvira i zaobljeni ugao izgleda odseceno. */
 .lista-komentara li.moj-komentar {
   border: 1px solid #f59e0b;
   border-radius: 4px;

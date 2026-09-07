@@ -6,15 +6,11 @@ const StavkaPonude = new Schema(
   {
     proizvod: { type: mongoose.Schema.Types.ObjectId, ref: "ProductModel", required: true },
     cenaPoJedinici: { type: Number, required: true },
-    // Kolicina koju stampar izjavljuje da moze da isporuci za tu stavku -
-    // mora biti >= trazene kolicine da bi ponuda vazila za tu stavku.
     dostupnaKolicina: { type: Number, required: true },
   },
   { _id: false }
 );
 
-// Jedna ponuda po paru (javnaNabavka, stampar) - "stampar salje za svoju
-// stampariju jednu ponudu (sa svim trazenim proizvodima) po javnoj nabavci".
 let Ponuda = new Schema({
   javnaNabavka: {
     type: mongoose.Schema.Types.ObjectId,

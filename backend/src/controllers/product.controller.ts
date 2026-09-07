@@ -3,9 +3,6 @@ import ProductModel from "../models/product";
 import UserModel from "../models/user";
 import CategoryModel from "../models/category";
 
-// Za dati niz proizvoda, doda naziv i grad stamparije (kreatora) u svaki
-// objekat, jednim batch upitom nad korisnicima (kreator je string kor_ime,
-// ne Mongo ref).
 async function saPodacimaOStampariji(proizvodi: any[]) {
   const korIsmena = [...new Set(proizvodi.map((p) => p.kreator))];
   const stamparije = await UserModel.find({ kor_ime: { $in: korIsmena } });
@@ -81,8 +78,6 @@ export class ProductController {
     }
   };
 
-  // Svi (sopstveni) proizvodi stamparije, ukljucujuci i one bez stanja -
-  // za razliku od javne pretrage koja izuzima proizvode na 0 stanja.
   getByStampar = async (req: express.Request, res: express.Response) => {
     try {
       const proizvodi = await ProductModel.find({
@@ -138,7 +133,6 @@ export class ProductController {
           const parsirano = JSON.parse(req.body.boje);
           if (Array.isArray(parsirano) && parsirano.length > 0) boje = parsirano;
         } catch {
-          // ostaje podrazumevano ["Bela"]
         }
       }
 
@@ -148,7 +142,6 @@ export class ProductController {
           const parsirano = JSON.parse(req.body.tipoviStampe);
           if (Array.isArray(parsirano)) tipoviStampe = parsirano;
         } catch {
-          // ostaje []
         }
       }
 

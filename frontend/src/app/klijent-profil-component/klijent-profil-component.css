@@ -58,8 +58,6 @@
   padding-left: 1.1rem;
 }
 
-/* Bedz za status porudzbine - boja prati logican tok od "u toku" ka
-   "zavrseno", tako da se stanje porudzbine prepoznaje na prvi pogled. */
 .status-bedz {
   display: inline-block;
   padding: 0.25rem 0.7rem;

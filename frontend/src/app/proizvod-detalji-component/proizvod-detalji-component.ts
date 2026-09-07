@@ -11,12 +11,6 @@ import { Proizvod } from '../models/proizvod';
 import { Recenzija } from '../models/recenzija';
 import { UPLOADS_URL } from '../services/api-config';
 
-// Podrazumevana Leaflet ikonica markera koristi relativne putanje ka
-// slikama koje bundler (esbuild/Angular build) ne razresava ispravno, pa
-// se rucno postavljaju na slike kopirane u public/leaflet (vidi
-// frontend/public/leaflet/*.png) i posluzene sa apsolutnom putanjom -
-// mora biti apsolutna (ne relativna), jer je trenutna ruta npr.
-// "/proizvodi/<id>", pa bi se relativna putanja pogresno razresila.
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: '/leaflet/marker-icon-2x.png',
@@ -24,10 +18,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: '/leaflet/marker-shadow.png',
 });
 
-// Javno vidljiva strana detalja proizvoda (naziv, stamparija, grad,
-// lajkovi/dislajkovi, glavna slika). Za ulogovanog klijenta (fizicko/
-// pravno) prikazuje se i prosireni deo: cena, boja, tipovi stampe i
-// dugme DALJE ka stranici pripreme proizvoda (Faza 4).
 @Component({
   selector: 'app-proizvod-detalji-component',
   imports: [RouterLink, FormsModule, DatePipe],
@@ -44,10 +34,6 @@ export class ProizvodDetaljiComponent implements OnInit, OnDestroy {
 
   private mapa: L.Map | null = null;
 
-  // Kontejner za mapu se pojavljuje u DOM-u tek kad su proizvod i jeKlijent
-  // istovremeno tacni (@if u template-u) - setter na ViewChild-u se poziva
-  // upravo u tom trenutku, sto je jednostavniji nacin da se sacekaju oba
-  // uslova nego rucno pracenje AfterViewInit + async ucitavanje proizvoda.
   @ViewChild('mapaKontejner') set mapaKontejnerRef(el: ElementRef<HTMLDivElement> | undefined) {
     if (el) {
       this.inicijalizujMapu(el.nativeElement);
@@ -61,9 +47,6 @@ export class ProizvodDetaljiComponent implements OnInit, OnDestroy {
   odabranaBoja = '';
   odabraniTipStampe = '';
 
-  // Galerija: glavna slika + do 3 dodatne (tzv. thumbnail) - vidi tekst
-  // projekta. Izbor korisnika (koja je trenutno "glavna") se pamti u
-  // kolacicu veb pregledaca, po proizvodu, i ucitava pri sledecoj poseti.
   odabraniIndeks = 0;
 
   ngOnInit(): void {
@@ -89,7 +72,6 @@ export class ProizvodDetaljiComponent implements OnInit, OnDestroy {
     return this.authService.trenutniKorisnik()?.kor_ime || '';
   }
 
-  // Tekst projekta trazi glavnu sliku + najvise 3 dodatne (ukupno do 4).
   get galerijaSlike(): string[] {
     return this.proizvod ? this.proizvod.slike.slice(0, 4) : [];
   }
@@ -99,8 +81,6 @@ export class ProizvodDetaljiComponent implements OnInit, OnDestroy {
     return slike.length > 0 ? `${UPLOADS_URL}/${slike[this.odabraniIndeks]}` : null;
   }
 
-  // Thumbnail traka prikazuje ostale slike iz galerije (ne i trenutno
-  // odabranu glavnu) - klik na jednu je "uvecava", tj. postavlja kao glavnu.
   get dodatneSlike(): { url: string; indeks: number }[] {
     return this.galerijaSlike
       .map((s, i) => ({ url: `${UPLOADS_URL}/${s}`, indeks: i }))
@@ -134,9 +114,7 @@ export class ProizvodDetaljiComponent implements OnInit, OnDestroy {
     L.marker([lat, lng])
       .addTo(this.mapa)
       .bindPopup(`${this.proizvod.nazivStamparije}<br>${this.proizvod.gradStamparije}`);
-    // Kontejner ponekad promeni sirinu nakon prvog iscrtavanja mape (npr.
-    // kad se ucita glavna slika proizvoda pa se promeni layout kolone) -
-    // invalidateSize sprecava da mapa ostane pogresno iseckana/siva.
+
     setTimeout(() => this.mapa?.invalidateSize(), 0);
   }
 
