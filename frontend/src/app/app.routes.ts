@@ -17,6 +17,7 @@ import { StamparKolicineComponent } from './stampar-kolicine-component/stampar-k
 import { StamparNarudzbineComponent } from './stampar-narudzbine-component/stampar-narudzbine-component';
 import { AdminNaloziComponent } from './admin-nalozi-component/admin-nalozi-component';
 import { AdminKategorijeComponent } from './admin-kategorije-component/admin-kategorije-component';
+import { AdminStatistikaComponent } from './admin-statistika-component/admin-statistika-component';
 import { ArhivaProizvodaComponent } from './arhiva-proizvoda-component/arhiva-proizvoda-component';
 import { JavneNabavkeComponent } from './javne-nabavke-component/javne-nabavke-component';
 import { StamparLicitacijeComponent } from './stampar-licitacije-component/stampar-licitacije-component';
@@ -94,6 +95,11 @@ export const routes: Routes = [
   {
     path: 'admin/kategorije',
     component: AdminKategorijeComponent,
+    canActivate: [roleGuard('admin')],
+  },
+  {
+    path: 'admin/statistika',
+    component: AdminStatistikaComponent,
     canActivate: [roleGuard('admin')],
   },
   { path: '**', redirectTo: '' },
