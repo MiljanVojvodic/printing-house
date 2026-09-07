@@ -1,0 +1,14 @@
+.grafikon-blok {
+  margin-bottom: 2.5rem;
+}
+
+.platno-omot {
+  max-width: 700px;
+  height: 350px;
+  position: relative;
+}
+
+.platno-omot canvas {
+  width: 100% !important;
+  height: 100% !important;
+}

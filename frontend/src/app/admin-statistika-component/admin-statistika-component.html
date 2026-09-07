@@ -1,0 +1,27 @@
+<h2>Statistika</h2>
+
+@if (greska) {
+  <p class="greska">{{ greska }}</p>
+}
+
+<section class="grafikon-blok">
+  <h3>Promet po štampariji (poslednja 3 meseca)</h3>
+  <div class="platno-omot">
+    <canvas #barCanvas></canvas>
+  </div>
+</section>
+
+<section class="grafikon-blok">
+  <h3>Najčešće naručivani proizvodi (poslednjih mesec dana)</h3>
+  <div class="platno-omot">
+    <canvas #pieCanvas></canvas>
+  </div>
+</section>
+
+<section class="grafikon-blok">
+  <h3>Kretanje ocene proizvoda kroz vreme</h3>
+  <p><i>Klik na naziv proizvoda u legendi ga isključuje/uključuje iz prikaza.</i></p>
+  <div class="platno-omot">
+    <canvas #lineCanvas></canvas>
+  </div>
+</section>
