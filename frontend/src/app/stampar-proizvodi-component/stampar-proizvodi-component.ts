@@ -6,6 +6,17 @@ import { CategoryService } from '../services/category-service';
 import { Proizvod, TipStampe } from '../models/proizvod';
 import { Kategorija } from '../models/kategorija';
 
+interface StavkaZaUvoz {
+  naziv: string;
+  opis: string;
+  kategorija: string;
+  podkategorija: string;
+  cena: number;
+  kolicinaNaStanju: number;
+  boje: string[];
+  tipoviStampe: TipStampe[];
+}
+
 @Component({
   selector: 'app-stampar-proizvodi-component',
   imports: [FormsModule],
@@ -36,6 +47,14 @@ export class StamparProizvodiComponent implements OnInit {
   poruka = '';
   uspesnaPoruka = '';
   slanjeUToku = false;
+
+  jsonPregled: StavkaZaUvoz[] = [];
+  jsonPoruka = '';
+  uvozUToku = false;
+  noviProizvodi: Proizvod[] = [];
+  odabraneSlikeZaUvoz: Record<string, File[]> = {};
+  slanjeSlikaUToku: Record<string, boolean> = {};
+  porukaSlike: Record<string, string> = {};
 
   ngOnInit(): void {
     this.categoryService.sveKategorije().subscribe((k) => (this.kategorije = k));
@@ -133,5 +152,101 @@ export class StamparProizvodiComponent implements OnInit {
     this.slikeFajlovi = [];
     this.usluge = [];
     this.novaUsluga = new TipStampe();
+  }
+
+  izaberiJsonFajl(event: Event) {
+    this.jsonPoruka = '';
+    this.jsonPregled = [];
+    const input = event.target as HTMLInputElement;
+    const fajl = input.files && input.files.length > 0 ? input.files[0] : null;
+    if (!fajl) return;
+
+    const citac = new FileReader();
+    citac.onload = () => {
+      try {
+        const sirovi = JSON.parse(citac.result as string);
+        if (!sirovi || !Array.isArray(sirovi.proizvodi) || sirovi.proizvodi.length === 0) {
+          this.jsonPoruka = 'Fajl ne sadrzi niz "proizvodi" (pogledaj format iz Priloga 1).';
+          return;
+        }
+        this.jsonPregled = sirovi.proizvodi.map((p: any) => ({
+          naziv: p.naziv || '',
+          opis: p.opis || '',
+          kategorija: p.kategorija || '',
+          podkategorija: p.potkategorija || '',
+          cena: Number(p.jedinicnaCena) || 0,
+          kolicinaNaStanju: Number(p.kolicinaNaLageru) || 0,
+          boje: Array.isArray(p.dostupneBoje) && p.dostupneBoje.length > 0 ? p.dostupneBoje : ['Bela'],
+          tipoviStampe: Array.isArray(p.uslugeStampe)
+            ? p.uslugeStampe.map((u: any) => ({
+                naziv: u.tipStampe || '',
+                maxSirinaMm: Number(u.maxSirinaMm) || 0,
+                maxVisinaMm: Number(u.maxVisinaMm) || 0,
+                dodatnaCenaPoKomadu: Number(u.dodatnaCenaPoKomadu) || 0,
+              }))
+            : [],
+        }));
+      } catch {
+        this.jsonPoruka = 'Fajl nije validan JSON.';
+      }
+    };
+    citac.readAsText(fajl);
+  }
+
+  uvezi() {
+    this.jsonPoruka = '';
+    const korisnik = this.authService.trenutniKorisnik();
+    if (!korisnik || this.jsonPregled.length === 0) return;
+
+    this.uvozUToku = true;
+    this.productService.uvezIzJsona(korisnik.kor_ime, this.jsonPregled).subscribe({
+      next: (kreirani) => {
+        this.uvozUToku = false;
+        this.noviProizvodi = kreirani;
+        this.jsonPregled = [];
+        this.ucitajSopstveneProizvode();
+      },
+      error: (err) => {
+        this.uvozUToku = false;
+        if (Array.isArray(err?.error?.greske)) {
+          this.jsonPoruka = err.error.greske.join(' ');
+        } else {
+          this.jsonPoruka = err?.error?.message || 'Doslo je do greske prilikom uvoza.';
+        }
+      },
+    });
+  }
+
+  izaberiSlikeZaUvezeni(proizvodId: string, event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.odabraneSlikeZaUvoz[proizvodId] = input.files ? Array.from(input.files) : [];
+  }
+
+  posaljiSlikeZaUvezeni(proizvodId: string) {
+    const fajlovi = this.odabraneSlikeZaUvoz[proizvodId] || [];
+    this.porukaSlike[proizvodId] = '';
+    if (fajlovi.length === 0) {
+      this.porukaSlike[proizvodId] = 'Izaberite bar jednu sliku.';
+      return;
+    }
+
+    const podaci = new FormData();
+    for (const fajl of fajlovi) {
+      podaci.append('slike', fajl);
+    }
+
+    this.slanjeSlikaUToku[proizvodId] = true;
+    this.productService.dodajSlike(proizvodId, podaci).subscribe({
+      next: (azuriran) => {
+        this.slanjeSlikaUToku[proizvodId] = false;
+        this.porukaSlike[proizvodId] = 'Slike su dodate.';
+        const indeks = this.noviProizvodi.findIndex((p) => p._id === proizvodId);
+        if (indeks !== -1) this.noviProizvodi[indeks] = azuriran;
+      },
+      error: (err) => {
+        this.slanjeSlikaUToku[proizvodId] = false;
+        this.porukaSlike[proizvodId] = err?.error?.message || 'Doslo je do greske.';
+      },
+    });
   }
 }

@@ -39,4 +39,12 @@ export class ProductService {
       kor_ime,
     });
   }
+
+  uvezIzJsona(kreator: string, proizvodi: unknown[]) {
+    return this.http.post<Proizvod[]>(`${this.uri}/uvoz-json`, { kreator, proizvodi });
+  }
+
+  dodajSlike(id: string, podaci: FormData) {
+    return this.http.post<Proizvod>(`${this.uri}/${id}/slike`, podaci);
+  }
 }

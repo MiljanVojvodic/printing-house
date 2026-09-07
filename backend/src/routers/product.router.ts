@@ -30,6 +30,16 @@ productRouter
   .put((req, res) => new ProductController().azurirajKolicinu(req, res));
 
 productRouter
+  .route("/uvoz-json")
+  .post((req, res) => new ProductController().uvozIzJsona(req, res));
+
+productRouter
+  .route("/:id/slike")
+  .post(upload.array("slike", 6), (req, res) =>
+    new ProductController().dodajSlike(req, res)
+  );
+
+productRouter
   .route("/:id")
   .get((req, res) => new ProductController().getById(req, res));
 
