@@ -41,8 +41,6 @@ export class KorpaComponent implements OnInit {
     this.poruka = '';
     this.potvrdjivanjeUToku = true;
 
-    // Pravno lice: umesto faktura, potvrda u e-korpi pokrece javnu nabavku
-    // (licitaciju) - vidi tekst zadatka, odeljak "Javne nabavke".
     if (korisnik.tip === 'pravno') {
       this.javnaNabavkaService
         .pokreni(korisnik._id, this.cartService.sveStavke())

@@ -11,9 +11,6 @@ export class GrupaStamparije {
   ukupnoZaStampariju = 0;
 }
 
-// Korpa se cuva u localStorage (isti obrazac kao 'ulogovan') - jednostavno
-// resenje, dovoljno za obim projekta; nestaje ako klijent promeni uredjaj
-// pre potvrde narudzbine.
 @Injectable({
   providedIn: 'root',
 })

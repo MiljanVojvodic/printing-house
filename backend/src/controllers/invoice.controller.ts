@@ -18,10 +18,6 @@ export class InvoiceController {
     }
   };
 
-  // Prima korpu (stavke iz vise stamparija), pravi po jednu fakturu za
-  // svaku stampariju, i umanjuje stanje naruceniih proizvoda. Sva provera
-  // stanja se ponavlja server-side (klijent je vec proverio na frontendu,
-  // ali se stanje moglo promeniti u medjuvremenu).
   potvrdiNarudzbinu = async (req: express.Request, res: express.Response) => {
     try {
       const { kupacId, stavke } = req.body as {
@@ -137,10 +133,6 @@ export class InvoiceController {
         brojFaktura: n,
       });
 
-      // Slanje mejla je pomocna funkcionalnost - ne sme da uspori niti da
-      // obori odgovor za samu narudzbinu (odgovor je vec poslat iznad).
-      // Generisanje PDF-a se cuva u memoriji (faktura-pdf.ts), bez pisanja
-      // na disk.
       (async () => {
         try {
           const prilozi = await Promise.all(
@@ -195,9 +187,6 @@ export class InvoiceController {
     }
   };
 
-  // Pomera fakturu na sledeci status u nizu naruceno -> u_stampi -> isporuceno.
-  // Stampar ide samo do "isporuceno" - "primljeno" iskljucivo postavlja
-  // klijent kroz Arhivu proizvoda (drugi endpoint ispod).
   sledeciStatus = async (req: express.Request, res: express.Response) => {
     try {
       const niz = ["naruceno", "u_stampi", "isporuceno"];
@@ -222,7 +211,6 @@ export class InvoiceController {
     }
   };
 
-  // Arhiva proizvoda: fakture klijenta koje su isporucene ili vec primljene.
   arhivaProizvoda = async (req: express.Request, res: express.Response) => {
     try {
       const fakture = await InvoiceModel.find({
@@ -238,10 +226,6 @@ export class InvoiceController {
     }
   };
 
-  // Klijent otkazuje fakturu - dozvoljeno samo dok stampa jos nije pocela
-  // (status "naruceno"), sto stiti sve kasnije statuse od otkazivanja.
-  // Kolicina rezervisana pri potvrdi narudzbine (potvrdiNarudzbinu) se vraca
-  // nazad na stanje proizvoda.
   otkaziNarudzbinu = async (req: express.Request, res: express.Response) => {
     try {
       const faktura = await InvoiceModel.findById(req.params.id);
@@ -270,7 +254,6 @@ export class InvoiceController {
     }
   };
 
-  // Klijent oznacava isporucenu fakturu kao primljenu.
   oznaciPrimljeno = async (req: express.Request, res: express.Response) => {
     try {
       const faktura = await InvoiceModel.findById(req.params.id);

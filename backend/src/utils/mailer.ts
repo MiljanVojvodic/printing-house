@@ -1,10 +1,5 @@
 import nodemailer from "nodemailer";
 
-// Za razvoj/testiranje koristimo Ethereal (nodemailer.createTestAccount) -
-// besplatan lazni SMTP nalog koji ne salje prave mejlove, vec generise link
-// za pregled poslate poruke (ispisuje se u konzoli). Za pravu odbranu,
-// zameniti sa realnim SMTP podacima (npr. Gmail app password) preko env
-// promenljivih SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS.
 let transporterPromise: Promise<nodemailer.Transporter> | null = null;
 
 function dobaviTransporter(): Promise<nodemailer.Transporter> {
@@ -30,8 +25,6 @@ function dobaviTransporter(): Promise<nodemailer.Transporter> {
   return transporterPromise;
 }
 
-// Ne baca gresku na neuspeh slanja - mejl je pomocna funkcionalnost i ne
-// sme da blokira glavni tok (npr. raspisivanje licitacije, potvrda narudzbine).
 export async function posaljiMejl(
   to: string,
   subject: string,

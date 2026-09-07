@@ -183,10 +183,6 @@ export class UserController {
     }
   };
 
-  // Zahtev za reset zaboravljene lozinke. Namerno se vraca ista poruka bez
-  // obzira da li nalog postoji, da se ne otkriva postojanje naloga po
-  // unetom kor. imenu/mejlu. Ako nalog postoji, mejl sa linkom se salje
-  // (posaljiMejl ne baca gresku ako slanje ne uspe - vidi mailer.ts).
   zatraziResetLozinke = async (req: express.Request, res: express.Response) => {
     try {
       const { korIsmeIliMejl } = req.body;
@@ -228,9 +224,6 @@ export class UserController {
     }
   };
 
-  // Provera da li je token iz linka jos uvek validan - koristi frontend
-  // pri otvaranju strane za unos nove lozinke, pre nego sto korisnik pocne
-  // da kuca (bolje korisnicko iskustvo od greske tek nakon slanja forme).
   proveriTokenReset = async (req: express.Request, res: express.Response) => {
     try {
       const tokenHash = hesirajToken(String(req.params.token));
@@ -278,10 +271,6 @@ export class UserController {
     }
   };
 
-  // Azuriranje sopstvenih podataka. kor_ime (iz rute) je nepromenljivo -
-  // cak i ako stigne u telu zahteva, ignorise se. Nema posebne provere
-  // vlasnistva (nema tokena/sesije u ovom projektu) - frontend uvek salje
-  // kor_ime ulogovanog korisnika iz localStorage.
   azurirajProfil = async (req: express.Request, res: express.Response) => {
     try {
       const kor_ime = req.params.kor_ime;
@@ -379,8 +368,7 @@ export class UserController {
     }
   };
 
-  // --- Admin funkcionalnosti (Faza 6) ---
-
+  // Admin
   sviKorisnici = async (req: express.Request, res: express.Response) => {
     try {
       const korisnici = await UserModel.find({}, "-lozinka").sort({ kor_ime: 1 });

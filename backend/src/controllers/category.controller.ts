@@ -13,7 +13,6 @@ export class CategoryController {
     }
   };
 
-  // Samo kategorije koje trenutno imaju bar jedan proizvod na stanju.
   getAktivne = async (req: express.Request, res: express.Response) => {
     try {
       const nazivi: string[] = await ProductModel.distinct("kategorija", {

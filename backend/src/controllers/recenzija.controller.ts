@@ -3,8 +3,6 @@ import RecenzijaModel from "../models/recenzija";
 import ProductModel from "../models/product";
 
 export class RecenzijaController {
-  // Salje/azurira lajk-dislajk + komentar za proizvod (jedna recenzija po
-  // paru proizvod-klijent). Odrzava agregatne brojace na Product-u.
   posalji = async (req: express.Request, res: express.Response) => {
     try {
       const { proizvodId, klijentId, korIme, tipReakcije, tekst } = req.body;
@@ -54,7 +52,6 @@ export class RecenzijaController {
     }
   };
 
-  // Poslednjih 5 komentara za dati proizvod, za prikaz na strani detalja.
   poslednjiKomentari = async (req: express.Request, res: express.Response) => {
     try {
       const komentari = await RecenzijaModel.find({
@@ -70,8 +67,6 @@ export class RecenzijaController {
     }
   };
 
-  // Sopstvena recenzija ulogovanog klijenta za dati proizvod (ako postoji) -
-  // da forma na Arhivi proizvoda moze da se predpopuni.
   mojaRecenzija = async (req: express.Request, res: express.Response) => {
     try {
       const recenzija = await RecenzijaModel.findOne({

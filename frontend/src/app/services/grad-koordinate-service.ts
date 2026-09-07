@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
 
-// Baza ne cuva geografske koordinate stamparije, samo naziv grada (string).
-// Tekst projekta trazi da mapa pokazuje "gde se stamparija nalazi" - dovoljna
-// je preciznost na nivou grada (centar grada), pa se ne uvodi zavisnost od
-// spoljnog geokodiranje servisa (koji ima limit poziva) - koordinate
-// najcescih srpskih gradova su ovde stalno upisane. Ako grad nije na listi,
-// koristi se centar Srbije kao razuman fallback.
 const KOORDINATE_GRADOVA: Record<string, [number, number]> = {
   Beograd: [44.7866, 20.4489],
   'Novi Sad': [45.2671, 19.8335],

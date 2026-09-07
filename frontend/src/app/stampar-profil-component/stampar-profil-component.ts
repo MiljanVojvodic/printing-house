@@ -5,8 +5,6 @@ import { UserService } from '../services/user-service';
 import { Korisnik } from '../models/korisnik';
 import { UPLOADS_URL } from '../services/api-config';
 
-// Isti obrazac kao KlijentProfilComponent (Faza 3), bez tabele porudzbina -
-// naruceni proizvodi stampara imaju svoju posebnu stranicu.
 @Component({
   selector: 'app-stampar-profil-component',
   imports: [FormsModule],

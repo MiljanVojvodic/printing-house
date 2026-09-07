@@ -33,6 +33,5 @@ export class JavnaNabavka {
   status: StatusNabavke = 'otvorena';
   pobednik: { _id: string; nazivInstitucije: string } | string | null = null;
   ukupanIznosPobednika: number | null = null;
-  // Dodaje backend samo u /stampar/:id odgovoru - sopstvena ponuda ako postoji.
   mojaPonuda?: Ponuda | null;
 }

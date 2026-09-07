@@ -37,8 +37,6 @@ export const upload = multer({
 const MIN_DIMENZIJA = 100;
 const MAX_DIMENZIJA = 250;
 
-// Vraca poruku o gresci ako slika ne zadovoljava dimenzije (100x100 do 250x250),
-// ili null ako je sve u redu. Brise fajl sa diska ako je nevalidan.
 export function proveriDimenzijeSlike(filePath: string): string | null {
   try {
     const { width, height } = imageSize(fs.readFileSync(filePath));

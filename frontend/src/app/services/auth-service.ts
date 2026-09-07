@@ -34,7 +34,6 @@ export class AuthService {
     localStorage.removeItem(KLJUC);
   }
 
-  // Ruta na koju korisnika treba preusmeriti nakon uspesnog logina, zavisno od tipa naloga.
   pocetnaRutaZaTip(tip: TipKorisnika): string {
     switch (tip) {
       case 'fizicko':

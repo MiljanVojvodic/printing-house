@@ -1,5 +1,3 @@
-/* Globalni stilovi - uniforman izgled kroz celu aplikaciju */
-
 * {
   box-sizing: border-box;
 }
@@ -49,8 +47,6 @@ table th {
   background: #e9edf2;
 }
 
-/* Razmak kad dugme ide odmah ispod tabele (npr. DALJE, POTVRDI, Posalji
-   ponudu...) - bez ovoga dugme lepi uz donju ivicu tabele. */
 table + button,
 table + input[type='submit'] {
   margin-top: 1rem;
@@ -66,8 +62,6 @@ textarea {
   border-radius: 4px;
 }
 
-/* Nijedan textarea na sajtu nije rucno rastegljiv - korisnik ga ne moze
-   razvuci i pokvariti izgled forme/tabele oko njega. */
 textarea {
   resize: none;
 }
@@ -101,9 +95,6 @@ fieldset {
   border-radius: 6px;
 }
 
-/* Responsive: manji ekrani (telefoni/tableti).
-   Tabela ostaje tabela (zaglavlja vidljiva), ali sama postaje horizontalno
-   skrolabilna - sadrzaj stranice pri tome ostaje bez horizontalnog skrola. */
 @media (max-width: 640px) {
   .sadrzaj {
     padding: 0.75rem;

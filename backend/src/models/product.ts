@@ -36,7 +36,6 @@ let Product = new Schema({
     required: true,
   },
   kreator: {
-    // kor_ime stamparije koja je vlasnik proizvoda
     type: String,
     required: true,
   },

@@ -14,10 +14,6 @@ const TrazenaStavka = new Schema(
   { _id: false }
 );
 
-// Jedan poziv za licitaciju - klijent pravno lice, umesto faktura,
-// raspisuje javnu nabavku sa listom potrebnih proizvoda. Traje 10 minuta
-// (rokIsteka), a zatvara se lenjo (bez tajmera/WebSocket-a) pri sledecem
-// citanju - vidi InvoiceController/JavnaNabavkaController.
 let JavnaNabavka = new Schema({
   klijent: {
     type: mongoose.Schema.Types.ObjectId,

@@ -13,7 +13,7 @@ export class Proizvod {
   cena = 0;
   kategorija = '';
   podkategorija = '';
-  kreator = ''; // kor_ime stamparije
+  kreator = '';
   kolicinaNaStanju = 0;
   slike: string[] = [];
   boje: string[] = ['Bela'];
@@ -21,8 +21,6 @@ export class Proizvod {
   lajkovi = 0;
   dislajkovi = 0;
 
-  // Dodaje backend uz proizvod (nije deo Mongo seme) radi prikaza bez
-  // dodatnog pretrazivanja korisnika na frontendu.
   nazivStamparije = '';
   gradStamparije = '';
 }

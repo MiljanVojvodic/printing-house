@@ -14,8 +14,6 @@ export class HeaderComponent {
   private cartService = inject(CartService);
   private router = inject(Router);
 
-  // Getter umesto polja - cita se iz localStorage pri svakoj promeni detekcije,
-  // pa meni ostaje tacan i nakon logina/logouta bez dodatne sinhronizacije.
   get korisnik() {
     return this.authService.trenutniKorisnik();
   }
@@ -25,9 +23,6 @@ export class HeaderComponent {
   }
 
   odjaviSe() {
-    // Tip citamo pre odjave (posle odjave getter vise nema koga da vrati),
-    // da bismo administratora vratili na admin ekran za prijavu, a ostale
-    // korisnike na obican ekran za prijavu.
     const jeAdmin = this.korisnik?.tip === 'admin';
     this.authService.odjaviSe();
     this.router.navigateByUrl(jeAdmin ? '/administracija/prijava' : '/prijava');

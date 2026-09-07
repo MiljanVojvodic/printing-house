@@ -25,9 +25,6 @@ interface PodaciZaIzvestaj {
   ukupanIznosPobednika: number | null;
 }
 
-// Izvestaj o zatvorenoj licitaciji (javnoj nabavci) - sve pristigle ponude
-// i ona koja je pobedila. Generise se na licu mesta (bez cuvanja na disk),
-// isti obrazac kao faktura-pdf.ts.
 export function generisiIzvestajPdf(podaci: PodaciZaIzvestaj): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50 });

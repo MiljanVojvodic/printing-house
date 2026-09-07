@@ -44,8 +44,6 @@ export class JavnaNabavkaService {
     return this.http.post(`${this.uri}/${nabavkaId}/ponuda`, { stamparId, stavke });
   }
 
-  // Direktan link (ne HttpClient poziv) - klik otvara/preuzima PDF, isto
-  // kao svaki obican link ka fajlu na serveru.
   izvestajUrl(nabavkaId: string): string {
     return `${this.uri}/${nabavkaId}/izvestaj.pdf`;
   }

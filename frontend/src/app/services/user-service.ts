@@ -56,7 +56,7 @@ export class UserService {
     });
   }
 
-  // --- Admin ---
+  // Admin
 
   sviKorisnici() {
     return this.http.get<Korisnik[]>(`${this.uri}/svi`);
