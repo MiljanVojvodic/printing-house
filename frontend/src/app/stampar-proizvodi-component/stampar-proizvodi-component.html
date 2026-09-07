@@ -127,6 +127,79 @@
   </button>
 </form>
 
+<h3>Dodavanje iz fajla</h3>
+<p><i>Uvoz vise proizvoda odjednom iz JSON fajla (format kao u Prilogu 1 teksta zadatka).</i></p>
+
+<div class="polje">
+  <label for="jsonFajl">JSON fajl sa proizvodima</label>
+  <input id="jsonFajl" type="file" accept=".json,application/json" (change)="izaberiJsonFajl($event)" />
+</div>
+
+@if (jsonPoruka) {
+  <p class="greska">{{ jsonPoruka }}</p>
+}
+
+@if (jsonPregled.length > 0) {
+  <table class="tabela-json-pregled">
+    <thead>
+      <tr>
+        <th>Naziv</th>
+        <th>Kategorija / Potkategorija</th>
+        <th>Cena</th>
+        <th>Kolicina</th>
+        <th>Boje</th>
+        <th>Usluge</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of jsonPregled; track $index) {
+        <tr>
+          <td>{{ p.naziv }}</td>
+          <td>{{ p.kategorija }} / {{ p.podkategorija }}</td>
+          <td>{{ p.cena }} RSD</td>
+          <td>{{ p.kolicinaNaStanju }}</td>
+          <td>{{ p.boje.join(', ') }}</td>
+          <td>{{ p.tipoviStampe.length }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <button type="button" [disabled]="uvozUToku" (click)="uvezi()">
+    {{ uvozUToku ? 'Uvoz u toku...' : 'Uvezi proizvode' }}
+  </button>
+}
+
+@if (noviProizvodi.length > 0) {
+  <h4>Uvezeni proizvodi - dodaj slike</h4>
+  <table class="tabela-json-slike">
+    <thead>
+      <tr>
+        <th>Naziv</th>
+        <th>Slike</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of noviProizvodi; track p._id) {
+        <tr>
+          <td>{{ p.naziv }}</td>
+          <td>
+            <input type="file" multiple accept="image/jpeg,image/png,image/gif" (change)="izaberiSlikeZaUvezeni(p._id, $event)" />
+          </td>
+          <td>
+            <button type="button" [disabled]="slanjeSlikaUToku[p._id]" (click)="posaljiSlikeZaUvezeni(p._id)">
+              {{ slanjeSlikaUToku[p._id] ? 'Slanje...' : 'Dodaj slike' }}
+            </button>
+            @if (porukaSlike[p._id]) {
+              <span class="uspeh">{{ porukaSlike[p._id] }}</span>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+
 <h3>Moji proizvodi</h3>
 @if (sopstveniProizvodi.length === 0) {
   <p><i>Još uvek nemate dodatih proizvoda.</i></p>

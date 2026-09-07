@@ -174,6 +174,111 @@ export class ProductController {
     }
   };
 
+  uvozIzJsona = async (req: express.Request, res: express.Response) => {
+    try {
+      const { kreator, proizvodi } = req.body as {
+        kreator: string;
+        proizvodi: {
+          naziv: string;
+          opis: string;
+          kategorija: string;
+          podkategorija: string;
+          cena: number;
+          kolicinaNaStanju: number;
+          boje: string[];
+          tipoviStampe: {
+            naziv: string;
+            maxSirinaMm: number;
+            maxVisinaMm: number;
+            dodatnaCenaPoKomadu: number;
+          }[];
+        }[];
+      };
+
+      if (!kreator || !Array.isArray(proizvodi) || proizvodi.length === 0) {
+        return res.status(400).json({ message: "Nema proizvoda za uvoz." });
+      }
+
+      const stampar = await UserModel.findOne({ kor_ime: kreator, tip: "stampar" });
+      if (!stampar) {
+        return res.status(400).json({ message: "Nepoznata stamparija." });
+      }
+
+      const kategorije = await CategoryModel.find({});
+      const kategorijaMapa = new Map(kategorije.map((k) => [k.naziv, k]));
+
+      const greske: string[] = [];
+      proizvodi.forEach((p, i) => {
+        const redniBroj = i + 1;
+        if (!p.naziv || !p.cena || !p.kategorija || !p.podkategorija) {
+          greske.push(`Stavka ${redniBroj}: nedostaju obavezna polja (naziv, cena, kategorija, potkategorija).`);
+          return;
+        }
+        const kategorijaDok = kategorijaMapa.get(p.kategorija);
+        if (!kategorijaDok) {
+          greske.push(`Stavka ${redniBroj} ("${p.naziv}"): nepoznata kategorija "${p.kategorija}".`);
+          return;
+        }
+        const potkategorijaPostoji = kategorijaDok.podkategorije!.some(
+          (pk) => pk.naziv === p.podkategorija
+        );
+        if (!potkategorijaPostoji) {
+          greske.push(
+            `Stavka ${redniBroj} ("${p.naziv}"): nepoznata potkategorija "${p.podkategorija}" za kategoriju "${p.kategorija}".`
+          );
+        }
+      });
+
+      if (greske.length > 0) {
+        return res.status(400).json({ message: "Fajl sadrzi greske, nista nije uvezeno.", greske });
+      }
+
+      const kreirani = await ProductModel.insertMany(
+        proizvodi.map((p) => ({
+          naziv: p.naziv,
+          kratakOpis: "",
+          duziOpis: p.opis || "",
+          cena: Number(p.cena),
+          kategorija: p.kategorija,
+          podkategorija: p.podkategorija,
+          kreator,
+          kolicinaNaStanju: Number(p.kolicinaNaStanju) || 0,
+          slike: [],
+          boje: Array.isArray(p.boje) && p.boje.length > 0 ? p.boje : ["Bela"],
+          tipoviStampe: Array.isArray(p.tipoviStampe) ? p.tipoviStampe : [],
+          lajkovi: 0,
+          dislajkovi: 0,
+        }))
+      );
+
+      res.status(201).json(kreirani);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske prilikom uvoza." });
+    }
+  };
+
+  dodajSlike = async (req: express.Request, res: express.Response) => {
+    try {
+      const proizvod = await ProductModel.findById(req.params.id);
+      if (!proizvod) {
+        return res.status(404).json({ message: "Proizvod ne postoji." });
+      }
+
+      const noveSlike = ((req.files as Express.Multer.File[]) || []).map((f) => f.filename);
+      if (noveSlike.length === 0) {
+        return res.status(400).json({ message: "Nije poslata nijedna slika." });
+      }
+
+      proizvod.slike = [...(proizvod.slike || []), ...noveSlike];
+      await proizvod.save();
+      res.json(proizvod);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Doslo je do greske." });
+    }
+  };
+
   azurirajKolicinu = async (req: express.Request, res: express.Response) => {
     try {
       const { kolicinaNaStanju, kor_ime } = req.body;
